@@ -1,4 +1,4 @@
-package database;
+package com.softkit.database;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

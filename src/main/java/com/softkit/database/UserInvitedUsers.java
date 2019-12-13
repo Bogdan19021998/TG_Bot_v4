@@ -1,4 +1,4 @@
-package database;
+package com.softkit.database;
 
 import org.hibernate.annotations.Type;
 
@@ -14,26 +14,26 @@ public class UserInvitedUsers {
     @Id
     @Column( unique = true )
     private int telegramId;
-
+/*
     @Type( type = "int-array" )
     @Column(
             columnDefinition = "integer[]"
     )
     private int[] invitedUsers;
-
+*/
     private Timestamp dateAdded;
 
     public UserInvitedUsers(){
     }
-
+/*
     public UserInvitedUsers(int[] invitedUsers ) {
         this.invitedUsers = invitedUsers;
     }
-
+*/
     public int getTelegramId() {
         return telegramId;
     }
-
+/*
     public int[] getInvitedUsers() {
         return invitedUsers;
     }
@@ -41,7 +41,7 @@ public class UserInvitedUsers {
     public void setInvitedUsers(int[] invitedUsers) {
         this.invitedUsers = invitedUsers;
     }
-
+*/
     public Timestamp getDateAdded() {
         return dateAdded;
     }

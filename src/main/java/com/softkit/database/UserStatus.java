@@ -1,4 +1,4 @@
-package database;
+package com.softkit.database;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

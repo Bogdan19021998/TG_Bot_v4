@@ -1,7 +1,7 @@
-package vo;
+package com.softkit.vo;
 
 import com.pengrad.telegrambot.request.BaseRequest;
-import database.User;
+import com.softkit.database.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,10 +1,12 @@
-package steps;
+package com.softkit.steps;
 
-import vo.Step;
+import com.softkit.vo.Step;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Service
 public class StepHolder {
 
     private static final Map<Step, AbstractStep> ALL_STEPS = new HashMap<>();

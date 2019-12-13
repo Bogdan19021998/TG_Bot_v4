@@ -1,4 +1,4 @@
-package database;
+package com.softkit.database;
 
 import org.hibernate.annotations.Type;
 
@@ -14,9 +14,9 @@ public class UserEmployments {
     @Column( unique = true )
     private long telegramId;
 
-    @Type( type = "int-array" )
-    @Column( columnDefinition = "integer[]" )
-    private int [] arrayEmployments;
+  //  @Type( type = "int-array" )
+  //  @Column( columnDefinition = "integer[]" )
+  //  private int [] arrayEmployments = null;
 
     public UserEmployments() {
     }
@@ -28,7 +28,7 @@ public class UserEmployments {
     public long getTelegramId() {
         return telegramId;
     }
-
+/*
     public int[] getArrayEmployments() {
         return arrayEmployments;
     }
@@ -36,7 +36,7 @@ public class UserEmployments {
     public void setArrayEmployments(int[] arrayEmployments) {
         this.arrayEmployments = arrayEmployments;
     }
-
+*/
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

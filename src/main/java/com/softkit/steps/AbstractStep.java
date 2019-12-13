@@ -1,10 +1,10 @@
-package steps;
+package com.softkit.steps;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
-import database.User;
-import vo.Step;
-import vo.UpdateProcessorResult;
+import com.softkit.database.User;
+import com.softkit.vo.Step;
+import com.softkit.vo.UpdateProcessorResult;
 
 public abstract class AbstractStep {
 

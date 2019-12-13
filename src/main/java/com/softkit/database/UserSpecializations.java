@@ -1,4 +1,4 @@
-package database;
+package com.softkit.database;
 
 import org.hibernate.annotations.Type;
 
@@ -13,31 +13,31 @@ public class UserSpecializations {
     @Id
     @Column( unique = true )
     private int telegramId;
-
+/*
     @Type( type = "int-array" )
     @Column(
             columnDefinition = "integer[]"
     )
     private int[] specializations;
-
+*/
     public UserSpecializations() {
     }
-
+/*
     public UserSpecializations( int [] specializations) {
         this.specializations = specializations;
-    }
+    }*/
 
     public int getTelegramId() {
         return telegramId;
     }
-
-    public int[] getSpecializations() {
-        return specializations;
-    }
-
-    public void setSpecializations(int[] specializations) {
-        this.specializations = specializations;
-    }
+//
+//    public int[] getSpecializations() {
+//        return specializations;
+//    }
+//
+//    public void setSpecializations(int[] specializations) {
+//        this.specializations = specializations;
+//    }
 
     @Override
     public boolean equals(Object o) {
