@@ -2,19 +2,17 @@ package com.softkit.database;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 import lombok.Setter;
-import com.softkit.vo.Step;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Objects;
 
 
 @Entity
 @Data
+@NonNull
+@Table(name="user")
 public class User {
 
     @Id
@@ -22,15 +20,19 @@ public class User {
     @Setter(value = AccessLevel.PRIVATE)
     private int userId;
 
-    private int statusId;
+    @OneToOne
+//    @JoinColumn(name="STATUS_ID")
+    private UserStatus userStatus;
+
     private String candidate;
-
-    private Step currentStep;
-
     private int age;
     private int experience;
     private int englishLevel;
+
+    // только одно из полей хранит значение
     private int city;
+    private int userLocation;
+
     private int salaryFrom;
     private int salaryUpTo;
     private String phone;
@@ -39,21 +41,12 @@ public class User {
     private Timestamp registrationTimestamp;
     private Timestamp dataEditTimestamp;
 
-    public User(int userId) {
-        this.userId = userId;
-        this.statusId = 0;
+    public User() {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return userId == user.userId;
+    public User( int userId , UserStatus userStatus) {
+        setUserId( userId );
+        setUserStatus( userStatus );
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
-    }
 }

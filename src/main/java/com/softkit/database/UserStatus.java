@@ -1,13 +1,13 @@
 package com.softkit.database;
 
 import lombok.Data;
+import org.hibernate.annotations.ManyToAny;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Created
@@ -18,16 +18,18 @@ import java.util.Objects;
 
 @Entity
 @Data
+@Table(name="user_status")
 public class UserStatus {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long statusId;
+//    @Column(name="STATUS_ID")
+    private int statusId;
 
     private String statusDescription;
     private String botMessage;
     private String userMistakeResponse;
-    private Timestamp dataAdded;
 
     public UserStatus() {
     }
@@ -36,14 +38,12 @@ public class UserStatus {
         this.statusDescription = statusDescription;
         this.botMessage = botMessage;
         this.userMistakeResponse = userMistakeResponse;
-        // year-mm-dd hh:mm:ss
-        dataAdded = new Timestamp(System.currentTimeMillis());
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof UserStatus)) return false;
         UserStatus that = (UserStatus) o;
         return statusId == that.statusId;
     }
