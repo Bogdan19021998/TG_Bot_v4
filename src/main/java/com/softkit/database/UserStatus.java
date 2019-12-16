@@ -18,13 +18,12 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name="user_status")
+//@Table(name = "user_status")
 public class UserStatus {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-//    @Column(name="STATUS_ID")
+    @Column(name="STATUS_ID")
     private int statusId;
 
     private String statusDescription;

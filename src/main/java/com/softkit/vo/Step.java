@@ -12,7 +12,16 @@ public enum Step {
         this.step = step;
     }
 
-    public int getStepId() {
+    public int getStepIntId() {
         return step;
+    }
+
+    public static Step getStepById(int id) {
+        for (Step value : values()) {
+            if (value.step == id) {
+                return value;
+            }
+        }
+        return null;
     }
 }

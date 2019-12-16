@@ -24,9 +24,9 @@ public class NameStatus extends AbstractStep {
         if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(userText)) {
             user.setCandidate(userText);
             nextStep = Step.SPECIALISATIONS;
-            botText = userStatusRepository.findById(nextStep.getStepId()).map(UserStatus::getBotMessage).get();
+            botText = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getBotMessage).get();
         } else {
-            botText = userStatusRepository.findById(nextStep.getStepId()).map(UserStatus::getUserMistakeResponse).get();
+            botText = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getUserMistakeResponse).get();
         }
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, botText), nextStep, user);

@@ -6,6 +6,7 @@ import com.softkit.database.User;
 import com.softkit.repository.UserRepository;
 import com.softkit.steps.AbstractStep;
 import com.softkit.steps.StepHolder;
+import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.vo.UpdateTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,7 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
         if (userId != null) {
             Optional<User> user = userRepository.findUserByUserId(userId);
 
-            AbstractStep step = user.map(u -> stepHolder.getStep(u.getCurrentStep())).orElseGet(stepHolder::getDefaultStatus);
+            AbstractStep step = user.map(u -> stepHolder.getStep(Step.getStepById(u.getCurrentStep()))).orElseGet(stepHolder::getDefaultStatus);
             UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
             // add
             userRepository.save(result.getUpdatedUser());

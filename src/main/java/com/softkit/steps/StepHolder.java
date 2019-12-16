@@ -1,12 +1,12 @@
 package com.softkit.steps;
 
-import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.BaseRequest;
-import com.softkit.database.User;
+import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
-import com.softkit.vo.UpdateProcessorResult;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,16 +14,20 @@ import static com.softkit.vo.Step.NAME_SURNAME;
 import static com.softkit.vo.Step.START;
 
 @Service
+@RequiredArgsConstructor
 public class StepHolder {
 
+    private final UserStatusRepository userStatusRepository;
+    private final ApplicationContext applicationContext;
+    private final DefaultStatus defaultStatus;
+
+    private static final String START_COMMAND = "/start";
     private static final Map<Step, AbstractStep> ALL_STEPS = new HashMap<>();
 
-    private static final AbstractStep DEFAULT_STATUS = new DefaultStatus();
-
-    static {
-        ALL_STEPS.put(START, DEFAULT_STATUS);
+    @PostConstruct
+    public void init() {
+        ALL_STEPS.put(START, defaultStatus);
         ALL_STEPS.put(NAME_SURNAME, new NameStatus());
-        // todo realize and add all statuses
     }
 
     public AbstractStep getStep(Step step) {
@@ -31,6 +35,10 @@ public class StepHolder {
     }
 
     public AbstractStep getDefaultStatus() {
-        return DEFAULT_STATUS;
+        return defaultStatus;
+    }
+
+    public static String getStartCommand() {
+        return START_COMMAND;
     }
 }

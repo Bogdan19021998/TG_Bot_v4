@@ -7,12 +7,15 @@ import com.softkit.repository.UserRepository;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public abstract class AbstractStep {
 
     @Autowired
-    UserStatusRepository userStatusRepository;
+    protected UserStatusRepository userStatusRepository;
 
     public abstract UpdateProcessorResult process(Update update, User user);
     public abstract Step getStepId();

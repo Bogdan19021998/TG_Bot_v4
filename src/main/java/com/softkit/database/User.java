@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NonNull
-@Table(name="user")
+//@Table(name="user")
 public class User {
 
     @Id
@@ -20,9 +20,11 @@ public class User {
     @Setter(value = AccessLevel.PRIVATE)
     private int userId;
 
-    @OneToOne
+//    @OneToOne
 //    @JoinColumn(name="STATUS_ID")
-    private UserStatus userStatus;
+//    private UserStatus userStatus;
+
+    private Integer userStatus;
 
     private String candidate;
     private int age;
@@ -44,9 +46,18 @@ public class User {
     public User() {
     }
 
-    public User( int userId , UserStatus userStatus) {
+    public User( int userId, UserStatus userStatus) {
         setUserId( userId );
-        setUserStatus( userStatus );
+       // setUserStatus( userStatus );
     }
 
+    public User( int userId) {
+        setUserId( userId );
+        setUserStatus( 1 );
+    }
+
+    public Integer getCurrentStep() {
+        return userStatus;
+        //return userStatus.getStatusId();
+    }
 }
