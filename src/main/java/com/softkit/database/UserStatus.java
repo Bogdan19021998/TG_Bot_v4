@@ -1,5 +1,7 @@
 package com.softkit.database;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +17,7 @@ import java.util.Objects;
 
 
 @Entity
+@Data
 public class UserStatus {
 
     @Id
@@ -35,42 +38,6 @@ public class UserStatus {
         this.userMistakeResponse = userMistakeResponse;
         // year-mm-dd hh:mm:ss
         dataAdded = new Timestamp(System.currentTimeMillis());
-    }
-
-    public long getStatusId() {
-        return statusId;
-    }
-
-    public String getStatusDescription() {
-        return statusDescription;
-    }
-
-    public void setStatusDescription(String statusDescription) {
-        this.statusDescription = statusDescription;
-    }
-
-    public String getBotMessage() {
-        return botMessage;
-    }
-
-    public void setBotMessage(String botMessage) {
-        this.botMessage = botMessage;
-    }
-
-    public String getUserMistakeResponse() {
-        return userMistakeResponse;
-    }
-
-    public void setUserMistakeResponse(String userMistakeResponse) {
-        this.userMistakeResponse = userMistakeResponse;
-    }
-
-    public Timestamp getDataAdded() {
-        return dataAdded;
-    }
-
-    public void setDataAdded(Timestamp dataAdded) {
-        this.dataAdded = dataAdded;
     }
 
     @Override

@@ -2,9 +2,17 @@ package com.softkit.vo;
 
 public enum Step {
 
-    START,
-    FIRST_NAME,
-    SECOND_NAME,
+    START(1),
+    NAME_SURNAME(2),
+    SPECIALISATIONS(3);
 
+    private final int step;
 
+    Step(int step) {
+        this.step = step;
+    }
+
+    public int getStepId() {
+        return step;
+    }
 }

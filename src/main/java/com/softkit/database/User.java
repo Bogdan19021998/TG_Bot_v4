@@ -39,7 +39,8 @@ public class User {
     private Timestamp registrationTimestamp;
     private Timestamp dataEditTimestamp;
 
-    public User() {
+    public User(int userId) {
+        this.userId = userId;
         this.statusId = 0;
     }
 

@@ -31,10 +31,8 @@ public class Bot extends TelegramBot {
 
     private void start() {
         System.out.println("Bot created");
-
         // getting userRepository bean
         // UserRepository ur = context.getBean(UserRepository.class);
-
 //        ApplicationContext context = new AnnotationConfigApplicationContext(TgBotApplication.class);
 //        updateProcessor = context.getBean(DefaultUpdateProcessor.class);
         setUpdatesListener(Update -> {
