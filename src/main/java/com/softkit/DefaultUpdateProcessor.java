@@ -7,6 +7,7 @@ import com.softkit.repository.UserRepository;
 import com.softkit.steps.AbstractStep;
 import com.softkit.steps.StepHolder;
 import com.softkit.vo.UpdateProcessorResult;
+import com.softkit.vo.UpdateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -36,25 +37,24 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
     @Override
     public void process(Update update) {
 
+        Integer userId = UpdateTool.getUserId(update);
+        if (userId != null) {
+            Optional<User> user = userRepository.findUserByUserId(userId);
 
-        Optional<User> user = userRepository.findUserByUserId(getUserId(update));
+            AbstractStep step = user.map(u -> stepHolder.getStep(u.getCurrentStep())).orElseGet(stepHolder::getDefaultStatus);
+            UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
+            // add
+            userRepository.save(result.getUpdatedUser());
 
-        AbstractStep step = user.map(u -> stepHolder.getStep(u.getCurrentStep())).orElseGet(stepHolder::getDefaultStatus);
-
-        UpdateProcessorResult result = step.process(update, user.orElse( new User() ));
-
-        if(step.getStepId() == result.getNextStep()) {
-            messageSender.send(result.getRequest());
-        } else {
-            BaseRequest request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result.getUpdatedUser());
-            messageSender.send(request);
-            userRepository.setNewStep(result.getUpdatedUser().getUserId(), result.getNextStep());
+            if (step.getStepId() == result.getNextStep()) {
+                messageSender.send(result.getRequest());
+            } else {
+                BaseRequest request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result.getUpdatedUser());
+                messageSender.send(request);
+                userRepository.setNewStep(userId, result.getNextStep());
+            }
         }
 
-    }
-
-    public Integer getUserId(Update u) {
-        return 1;
     }
 
 }

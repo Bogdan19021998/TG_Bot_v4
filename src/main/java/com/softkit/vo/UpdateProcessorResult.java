@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class UpdateProcessorResult {
     @Nullable
-    private Long messageId;
+    private Long chatId;
 
     @NotNull
     private BaseRequest<?, ?> request;
