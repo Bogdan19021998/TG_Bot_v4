@@ -9,20 +9,21 @@ import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.vo.UpdateTool;
+import org.springframework.stereotype.Component;
 
-public class NameStatus extends AbstractStep {
+@Component
+public class CandidateStatus extends AbstractStep {
 
     public UpdateProcessorResult process(Update update, User user) {
 
-        String userText = UpdateTool.getUpdateMessage(update).text();
-        Step nextStep = getStepId();
-        int userTextWords = TextParser.wordCount(userText);
+        Long chatId = UpdateTool.getChatId(update);
 
-        long chatId = UpdateTool.getUpdateMessage(update).chat().id();
+        outgoingMessage = UpdateTool.getUpdateMessage(update).text();
+        int userTextWords = TextParser.wordCount(outgoingMessage);
 
         String botText;
-        if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(userText)) {
-            user.setCandidate(userText);
+        if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(outgoingMessage)) {
+            user.setCandidate(TextParser.fixSpacing(outgoingMessage));
             nextStep = Step.SPECIALISATIONS;
             botText = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getBotMessage).get();
         } else {
@@ -33,12 +34,12 @@ public class NameStatus extends AbstractStep {
     }
 
     public Step getStepId() {
-        return Step.NAME_SURNAME;
+        return Step.CANDIDATE;
     }
 
     @Override
-    public BaseRequest<?, ?> buildDefaultResponse(User user) {
-        return new SendMessage(user.getUserId(), "Please enter you first name");
+    public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult result) {
+        return result.getRequest();
     }
 
 }

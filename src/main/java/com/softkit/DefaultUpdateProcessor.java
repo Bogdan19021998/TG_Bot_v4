@@ -29,33 +29,33 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
     @Qualifier("botMessageSender")
     private IMessageSender messageSender;
 
-//    public DefaultUpdateProcessor(UserRepository userRepository, StepHolder stepHolder, IMessageSender messageSender) {
-//        this.userRepository = userRepository;
-//        this.stepHolder = stepHolder;
-//        this.messageSender = messageSender;
-//    }
-
     @Override
     public void process(Update update) {
 
         Integer userId = UpdateTool.getUserId(update);
-        if (userId != null) {
-            Optional<User> user = userRepository.findUserByUserId(userId);
 
-            AbstractStep step = user.map(u -> stepHolder.getStep(Step.getStepById(u.getCurrentStep()))).orElseGet(stepHolder::getDefaultStatus);
-            UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
-            // add
-            userRepository.save(result.getUpdatedUser());
+        if (userId != null)
+            if (UpdateTool.getUpdateMessage(update).text() != null || UpdateTool.isCallback(update)) {
+                Optional<User> user = userRepository.findUserByUserId(userId);
 
-            if (step.getStepId() == result.getNextStep()) {
-                messageSender.send(result.getRequest());
+                AbstractStep step = user.map(u -> stepHolder.getStep(Step.getStepById(u.getCurrentStep()))).orElseGet(stepHolder::getDefaultStatus);
+
+                System.out.println("update from user " + UpdateTool.getUserId(update) + " with status " + step.getStepId());
+
+                UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
+                // add
+                userRepository.save(result.getUpdatedUser());
+
+                if (step.getStepId() == result.getNextStep()) {
+                    messageSender.send(result.getRequest());
+                } else {
+                    BaseRequest<?, ?> request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
+                    messageSender.send(request);
+                    userRepository.setNewStep(userId, result.getNextStep());
+                }
             } else {
-                BaseRequest request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result.getUpdatedUser());
-                messageSender.send(request);
-                userRepository.setNewStep(userId, result.getNextStep());
+                // some text about wrong user action
             }
-        }
-
     }
 
 }

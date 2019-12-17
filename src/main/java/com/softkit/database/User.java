@@ -1,5 +1,6 @@
 package com.softkit.database;
 
+import com.softkit.vo.Step;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NonNull;
@@ -58,6 +59,5 @@ public class User {
 
     public Integer getCurrentStep() {
         return userStatus;
-        //return userStatus.getStatusId();
     }
 }

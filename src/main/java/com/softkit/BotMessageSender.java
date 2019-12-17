@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class BotMessageSender implements IMessageSender {
 
     @Override
-    public <T extends BaseRequest, R extends BaseResponse> boolean send(BaseRequest<T, R> r) {
+    public <T extends BaseRequest<?,?>, R extends BaseResponse> boolean send(BaseRequest<T, R> r) {
         return TgBotApplication.applicationContext.getBean(Bot.class).execute( r ).isOk();
     }
 }

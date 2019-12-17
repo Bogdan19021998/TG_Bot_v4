@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface IMessageSender {
 
-    <T extends BaseRequest, R extends BaseResponse> boolean send(BaseRequest<T, R> r);
+    <T extends BaseRequest<?,?>, R extends BaseResponse> boolean send(BaseRequest<T, R> r);
 }

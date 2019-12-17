@@ -21,7 +21,6 @@ public class UpdateProcessorResult {
     @NotNull
     private BaseRequest<?, ?> request;
 
-    @Nullable
     private Step nextStep;
 
     private User updatedUser;

@@ -17,9 +17,13 @@ public abstract class AbstractStep {
     @Autowired
     protected UserStatusRepository userStatusRepository;
 
+    protected Step nextStep = getStepId();
+    protected String outgoingMessage;
+
     public abstract UpdateProcessorResult process(Update update, User user);
+
     public abstract Step getStepId();
 
-    public abstract BaseRequest<?, ?> buildDefaultResponse(User user);
+    public abstract BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult);
 
 }

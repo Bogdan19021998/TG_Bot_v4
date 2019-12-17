@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.GetUpdates;
 import com.softkit.repository.UserRepository;
 import com.softkit.steps.StepHolder;
+import com.softkit.vo.UpdateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -31,10 +32,6 @@ public class Bot extends TelegramBot {
 
     private void start() {
         System.out.println("Bot created");
-        // getting userRepository bean
-        // UserRepository ur = context.getBean(UserRepository.class);
-//        ApplicationContext context = new AnnotationConfigApplicationContext(TgBotApplication.class);
-//        updateProcessor = context.getBean(DefaultUpdateProcessor.class);
         setUpdatesListener(Update -> {
             updateProcessor.process(execute(getUpdates).updates().get(0));
             return UpdatesListener.CONFIRMED_UPDATES_ALL;

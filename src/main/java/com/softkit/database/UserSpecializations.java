@@ -13,13 +13,13 @@ public class UserSpecializations {
     @Id
     @Column( unique = true )
     private int telegramId;
-/*
-    @Type( type = "int-array" )
-    @Column(
-            columnDefinition = "integer[]"
-    )
-    private int[] specializations;
-*/
+
+//    @Type( type = "int-array" )
+//    @Column(
+//            columnDefinition = "integer[]"
+//    )
+//    private int[] specializations;
+
     public UserSpecializations() {
     }
 /*

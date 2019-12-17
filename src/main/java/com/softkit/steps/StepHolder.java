@@ -10,8 +10,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.softkit.vo.Step.NAME_SURNAME;
-import static com.softkit.vo.Step.START;
+import static com.softkit.vo.Step.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +19,8 @@ public class StepHolder {
     private final UserStatusRepository userStatusRepository;
     private final ApplicationContext applicationContext;
     private final DefaultStatus defaultStatus;
+    private final CandidateStatus candidateStatus;
+    private final SpecialisationStatus specialisationStatus;
 
     private static final String START_COMMAND = "/start";
     private static final Map<Step, AbstractStep> ALL_STEPS = new HashMap<>();
@@ -27,7 +28,8 @@ public class StepHolder {
     @PostConstruct
     public void init() {
         ALL_STEPS.put(START, defaultStatus);
-        ALL_STEPS.put(NAME_SURNAME, new NameStatus());
+        ALL_STEPS.put(CANDIDATE, candidateStatus);
+        ALL_STEPS.put(SPECIALISATIONS, specialisationStatus);
     }
 
     public AbstractStep getStep(Step step) {

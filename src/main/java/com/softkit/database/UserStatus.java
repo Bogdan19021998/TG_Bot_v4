@@ -23,7 +23,6 @@ public class UserStatus {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="STATUS_ID")
     private int statusId;
 
     private String statusDescription;
