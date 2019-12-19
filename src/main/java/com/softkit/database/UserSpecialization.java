@@ -1,51 +1,30 @@
 package com.softkit.database;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
 
 @Entity
+@Data
+@NoArgsConstructor
+@NotNull
+@EqualsAndHashCode
 public class UserSpecialization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
+    @Setter( value = AccessLevel.NONE )
+    @EqualsAndHashCode.Include
     private Integer specializationId;
 
     private String specializationDescription;
 
-    public UserSpecialization() {
-    }
-
-    public UserSpecialization( String specializationDescription ) {
+    public UserSpecialization( String specializationDescription )
+    {
         this.specializationDescription = specializationDescription;
-    }
-
-    public Integer getSpecializationId() {
-        return specializationId;
-    }
-
-    public String getSpecializationDescription() {
-        return specializationDescription;
-    }
-
-    public void setSpecializationDescription(String specializationDescription) {
-        this.specializationDescription = specializationDescription;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserSpecialization)) return false;
-        UserSpecialization that = (UserSpecialization) o;
-        return specializationId == that.specializationId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(specializationId);
     }
 }

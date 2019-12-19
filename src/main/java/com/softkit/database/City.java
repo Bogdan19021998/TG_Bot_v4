@@ -1,21 +1,21 @@
 package com.softkit.database;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
+@Table(name="city_table")
 @Data
 @NoArgsConstructor
-@Entity(name="cities")
+@NonNull
+@EqualsAndHashCode
 public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
+    @Setter( value = AccessLevel.NONE )
+    @EqualsAndHashCode.Include
     private long cityId;
 
     private String cityName;

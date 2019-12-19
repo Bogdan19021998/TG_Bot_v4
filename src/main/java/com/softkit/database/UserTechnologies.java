@@ -1,30 +1,25 @@
 package com.softkit.database;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@NotNull
+@EqualsAndHashCode
 public class UserTechnologies {
 
     @Id
     @Column( unique = true )
+    @EqualsAndHashCode.Include
     private Integer id;
 
-    private String technologies;
-
-
-//    private UserProfile userProfile;
-
-    public UserTechnologies() {
-    }
-
-    public UserTechnologies( String technologies, long dateAdded ) {
-        this.technologies = technologies;
-//        this.dateAdded = new Timestamp( dateAdded );
-    }
-
+    private String technology;
 }

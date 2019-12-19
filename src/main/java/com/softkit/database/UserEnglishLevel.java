@@ -1,50 +1,30 @@
 package com.softkit.database;
 
+import lombok.*;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
+import javax.validation.constraints.NotNull;
 
 @Entity
+@Data
+@NoArgsConstructor
+@NotNull
+@EqualsAndHashCode
 public class UserEnglishLevel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE)
-    private int englishLevelId;
+    @Setter( value = AccessLevel.NONE )
+    @EqualsAndHashCode.Include
+    private Integer englishLevelId;
 
     private String englishLevelDescription;
 
-    public UserEnglishLevel() {
-    }
-
-    public UserEnglishLevel( String englishLevelDescription ) {
+    public UserEnglishLevel( String englishLevelDescription )
+    {
         this.englishLevelDescription = englishLevelDescription;
-    }
-
-
-    public int getEnglishLevelId() {
-        return englishLevelId;
-    }
-
-    public String getEnglishLevelDescription() {
-        return englishLevelDescription;
-    }
-
-    public void setEnglishLevelDescription(String englishLevelDescription) {
-        this.englishLevelDescription = englishLevelDescription;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UserEnglishLevel)) return false;
-        UserEnglishLevel that = (UserEnglishLevel) o;
-        return englishLevelId == that.englishLevelId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(englishLevelId);
     }
 }
