@@ -1,7 +1,7 @@
 package com.softkit.vo;
 
 import com.pengrad.telegrambot.request.BaseRequest;
-import com.softkit.database.User;
+import com.softkit.database.UserProfile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +23,6 @@ public class UpdateProcessorResult {
 
     private Step nextStep;
 
-    private User updatedUser;
+    private UserProfile updatedUserProfile;
 
 }

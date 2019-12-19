@@ -3,7 +3,7 @@ package com.softkit.steps;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.softkit.database.User;
+import com.softkit.database.UserProfile;
 import com.softkit.database.UserStatus;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CandidateStatus extends AbstractStep {
 
-    public UpdateProcessorResult process(Update update, User user) {
+    public UpdateProcessorResult process(Update update, UserProfile userProfile) {
 
         Long chatId = UpdateTool.getChatId(update);
 
@@ -23,14 +23,14 @@ public class CandidateStatus extends AbstractStep {
 
         String botText;
         if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(outgoingMessage)) {
-            user.setCandidate(TextParser.fixSpacing(outgoingMessage));
+            userProfile.setCandidate(TextParser.fixSpacing(outgoingMessage));
             nextStep = Step.SPECIALISATIONS;
             botText = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getBotMessage).get();
         } else {
             botText = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getUserMistakeResponse).get();
         }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, botText), nextStep, user);
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, botText), nextStep, userProfile);
     }
 
     public Step getStepId() {

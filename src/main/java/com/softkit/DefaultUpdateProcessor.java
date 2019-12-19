@@ -1,19 +1,11 @@
 package com.softkit;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.BaseRequest;
-import com.softkit.database.User;
 import com.softkit.repository.UserRepository;
-import com.softkit.steps.AbstractStep;
 import com.softkit.steps.StepHolder;
-import com.softkit.vo.Step;
-import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 //@RequiredArgsConstructor
 @Component
@@ -32,6 +24,7 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
     @Override
     public void process(Update update) {
 
+        /*
         Integer userId = UpdateTool.getUserId(update);
 
         if (userId != null)
@@ -56,6 +49,8 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
             } else {
                 // some text about wrong user action
             }
+
+         */
     }
 
 }
