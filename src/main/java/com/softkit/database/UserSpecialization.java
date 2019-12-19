@@ -1,5 +1,7 @@
 package com.softkit.database;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,8 +12,8 @@ import java.util.Objects;
 public class UserSpecialization {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int specializationId;
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Integer specializationId;
 
     private String specializationDescription;
 
@@ -22,7 +24,7 @@ public class UserSpecialization {
         this.specializationDescription = specializationDescription;
     }
 
-    public int getSpecializationId() {
+    public Integer getSpecializationId() {
         return specializationId;
     }
 

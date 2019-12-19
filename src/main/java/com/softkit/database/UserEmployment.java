@@ -1,6 +1,8 @@
 package com.softkit.database;
 
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,31 +10,19 @@ import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
+@Data
 public class UserEmployment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int employmentId;
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Integer employmentId;
 
     private String employmentDescription;
 
     public UserEmployment() {
     }
 
-    public UserEmployment( int employmentId )
-    {
-        this.employmentId = employmentId;
-    }
-
-    public int getEmploymentId() {
-        return employmentId;
-    }
-
-    public String getEmploymentDescription() {
-        return employmentDescription;
-    }
-
-    public void setEmploymentDescription(String employmentDescription) {
+    public UserEmployment(String employmentDescription) {
         this.employmentDescription = employmentDescription;
     }
 

@@ -10,7 +10,7 @@ import java.util.Objects;
 public class UserEnglishLevel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int englishLevelId;
 
     private String englishLevelDescription;

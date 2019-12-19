@@ -9,11 +9,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
-
 @Entity
 @Data
 @NonNull
-//@Table(name="user")
+@Table(name="user_table")
 public class User {
 
     @Id

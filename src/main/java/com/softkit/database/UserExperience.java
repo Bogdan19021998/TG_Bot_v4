@@ -1,5 +1,7 @@
 package com.softkit.database;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,10 +9,11 @@ import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
+@Data
 public class UserExperience {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int experienceId;
 
     private String experienceDescription;
@@ -19,18 +22,6 @@ public class UserExperience {
     }
 
     public UserExperience( String experienceDescription ) {
-        this.experienceDescription = experienceDescription;
-    }
-
-    public int getExperienceId() {
-        return experienceId;
-    }
-
-    public String getExperienceDescription() {
-        return experienceDescription;
-    }
-
-    public void setExperienceDescription(String experienceDescription) {
         this.experienceDescription = experienceDescription;
     }
 

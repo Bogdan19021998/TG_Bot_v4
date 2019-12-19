@@ -22,10 +22,11 @@ import java.util.Set;
 public class UserStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int statusId;
 
     private String statusDescription;
+    @Column(length = 511)
     private String botMessage;
     private String userMistakeResponse;
 

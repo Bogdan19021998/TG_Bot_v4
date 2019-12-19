@@ -11,14 +11,16 @@ import javax.persistence.Id;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class Cities {
+@Entity(name="cities")
+public class City {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private long cityId;
 
     private String cityName;
 
+    public City(String cityName) {
+        this.cityName = cityName;
+    }
 }
