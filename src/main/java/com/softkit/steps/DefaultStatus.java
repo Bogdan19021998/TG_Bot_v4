@@ -3,7 +3,7 @@ package com.softkit.steps;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.softkit.database.UserProfile;
+import com.softkit.database.User;
 import com.softkit.database.UserStatus;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class DefaultStatus extends AbstractStep {
 
     @Override
-    public UpdateProcessorResult process(Update update, UserProfile userProfile) {
+    public UpdateProcessorResult process(Update update, User userProfile) {
         Long chatId = UpdateTool.getChatId(update);
 
         if (UpdateTool.getUpdateMessage(update).text().contentEquals(StepHolder.getStartCommand())) {

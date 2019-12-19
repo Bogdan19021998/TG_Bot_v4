@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class EnglishLevel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
     private Integer englishLevelId;
