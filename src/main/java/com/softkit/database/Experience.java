@@ -12,19 +12,18 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @NotNull
-@EqualsAndHashCode
+//@EqualsAndHashCode
 public class Experience {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    @Setter( value = AccessLevel.NONE )
-    @EqualsAndHashCode.Include
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+//    @Setter( value = AccessLevel.NONE )
+//    @EqualsAndHashCode.Include
     private Integer experienceId;
 
     private String experienceDescription;
 
     public Experience(String experienceDescription ) {
-
         this.experienceDescription = experienceDescription;
     }
 

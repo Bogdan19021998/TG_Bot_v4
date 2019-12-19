@@ -6,6 +6,8 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 
 import java.util.List;
 
+import static com.softkit.steps.StepHolder.FINISH_SELECTION;
+
 public class UpdateTool {
 
     public static Message getUpdateMessage(Update u) {
@@ -40,11 +42,13 @@ public class UpdateTool {
 
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns) {
 
-        int rows = (strings.size() + 1) / columns;
-        int lastRowLength = strings.size() % columns == 0 ? columns : strings.size() % columns;
-
+        int buttons_count = strings.size() + 1;   // +1 for exit button
+        int rows = (buttons_count + (columns - 1) ) / columns; // rows count ( + (columns - 1) for odd buttons_count )
+        // last row length including exit button
+        int lastRowLength = buttons_count % columns == 0 ? columns : buttons_count % columns;
+        // 2D button array
         InlineKeyboardButton[][] inlineKeyboardButtons = new InlineKeyboardButton[rows][];
-
+        // rows (except last) initialization
         for (int i = 0; i < rows -1 ; i++) {
             InlineKeyboardButton[] row = new InlineKeyboardButton[columns];
             for (int j = 0; j < columns; j++) {
@@ -52,11 +56,12 @@ public class UpdateTool {
             }
             inlineKeyboardButtons[i] = row;
         }
-
+        // last row initialisation
         InlineKeyboardButton[] lastRow = new InlineKeyboardButton[lastRowLength];
-        for (int i = 0; i < lastRowLength; i++) {
-            lastRow[i] = new InlineKeyboardButton(strings.get(strings.size() - lastRowLength + i)).callbackData(strings.get(strings.size() - lastRowLength + i));
+        for (int i = 0; i < lastRowLength - 1; i++) { // excluding exit button place
+            lastRow[i] = new InlineKeyboardButton(strings.get(buttons_count - lastRowLength + i)).callbackData(strings.get(buttons_count - lastRowLength + i));
         }
+        lastRow[lastRowLength - 1] = new InlineKeyboardButton("Завершить").callbackData(FINISH_SELECTION); // adding exit button
         inlineKeyboardButtons[rows - 1] = lastRow;
 
         return inlineKeyboardButtons;

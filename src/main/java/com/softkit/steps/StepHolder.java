@@ -18,6 +18,7 @@ public class StepHolder {
     private final CandidateStatus candidateStatus;
     private final SpecialisationStatus specialisationStatus;
 
+    public static final String FINISH_SELECTION = "com.softkit.FINISH_SELECTION";
     private static final String START_COMMAND = "/start";
     private static final Map<Step, AbstractStep> ALL_STEPS = new HashMap<>();
 

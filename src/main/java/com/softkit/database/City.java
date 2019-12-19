@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class City {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
     private long cityId;

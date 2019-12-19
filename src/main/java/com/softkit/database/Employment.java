@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class Employment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
     private Integer employmentId;

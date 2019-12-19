@@ -18,7 +18,7 @@ public class Bot extends TelegramBot {
     private static String token = "1032578818:AAEcsGFQ46oLcenajdG7vUB_jPyuazzdqIk";
 
     private Bot() {
-        super("1");
+        super(token);
         getUpdates = new GetUpdates().limit(1).offset(0).timeout(100);
         start();
     }
@@ -26,7 +26,7 @@ public class Bot extends TelegramBot {
     private void start() {
         System.out.println("Bot created");
         setUpdatesListener(Update -> {
-//            updateProcessor.process(execute(getUpdates).updates().get(0));
+            updateProcessor.process(execute(getUpdates).updates().get(0));
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
     }
