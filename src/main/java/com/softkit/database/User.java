@@ -1,62 +1,50 @@
 package com.softkit.database;
 
 import com.softkit.vo.Step;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
-@Data
-@NonNull
 @Table(name="user_table")
+@Data
+@NoArgsConstructor
+@NotNull
+@EqualsAndHashCode
 public class User {
 
     @Id
     @Column( unique = true )
-    @Setter(value = AccessLevel.PRIVATE)
-    private int userId;
+    @Setter( value = AccessLevel.NONE )
+    @EqualsAndHashCode.Include
+    private Integer userId;
 
-//    @OneToOne
-//    @JoinColumn(name="STATUS_ID")
-//    private UserStatus userStatus;
+//    @OneToMany( cascade = CascadeType.ALL )
+//    @JoinColumn(name="user_default_specializations_specialization_id", referencedColumnName = "specialization_id")
+//    @JoinColumn(name="user_default_specializations_specialization_id")
+//    @ElementCollection
+//    Set<UserDefaultSpecializations> userDefaultSpecializations;
 
-    private Integer userStatus;
-
+    @Enumerated(EnumType.ORDINAL)
+    private Step step;
     private String candidate;
-    private int age;
-    private int experience;
-    private int englishLevel;
-
-    // только одно из полей хранит значение
-    private int city;
-    private int userLocation;
-
-    private int salaryFrom;
-    private int salaryUpTo;
+    private Integer age;
+    private Integer experience;
+    private Integer englishLevel;
+    private Integer city;
+    private Integer userLocation;
+    private Integer salaryFrom;
+    private Integer salaryUpTo;
     private String phone;
     private String resumeFileId;
     private String referralLink;
     private Timestamp registrationTimestamp;
     private Timestamp dataEditTimestamp;
 
-    public User() {
-    }
-
-    public User( int userId, UserStatus userStatus) {
-        setUserId( userId );
-       // setUserStatus( userStatus );
-    }
-
-    public User( int userId) {
-        setUserId( userId );
-        setUserStatus( 1 );
-    }
-
-    public Integer getCurrentStep() {
-        return userStatus;
+    public User( Integer userId ) {
+        this.userId = userId;
+        setStep(Step.START);
     }
 }

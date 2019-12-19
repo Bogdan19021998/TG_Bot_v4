@@ -1,9 +1,7 @@
 package com.softkit.steps;
 
-import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +14,6 @@ import static com.softkit.vo.Step.*;
 @RequiredArgsConstructor
 public class StepHolder {
 
-    private final UserStatusRepository userStatusRepository;
-    private final ApplicationContext applicationContext;
     private final DefaultStatus defaultStatus;
     private final CandidateStatus candidateStatus;
     private final SpecialisationStatus specialisationStatus;

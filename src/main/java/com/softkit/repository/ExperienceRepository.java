@@ -1,10 +1,10 @@
 package com.softkit.repository;
 
-import com.softkit.database.City;
+import com.softkit.database.Experience;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CityRepository extends CrudRepository<City, Integer> {
+public interface ExperienceRepository extends CrudRepository<Experience, Integer> {
 
 }

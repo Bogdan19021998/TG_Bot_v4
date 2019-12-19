@@ -6,7 +6,6 @@ import com.softkit.database.User;
 import com.softkit.repository.UserRepository;
 import com.softkit.steps.AbstractStep;
 import com.softkit.steps.StepHolder;
-import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.vo.UpdateTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-//@RequiredArgsConstructor
 @Component
 public class DefaultUpdateProcessor implements UpdateProcessor {
 
@@ -38,7 +36,7 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
             if (UpdateTool.getUpdateMessage(update).text() != null || UpdateTool.isCallback(update)) {
                 Optional<User> user = userRepository.findUserByUserId(userId);
 
-                AbstractStep step = user.map(u -> stepHolder.getStep(Step.getStepById(u.getCurrentStep()))).orElseGet(stepHolder::getDefaultStatus);
+                AbstractStep step = user.map(u -> stepHolder.getStep(u.getStep())).orElseGet(stepHolder::getDefaultStatus);
 
                 System.out.println("update from user " + UpdateTool.getUserId(update) + " with status " + step.getStepId());
 

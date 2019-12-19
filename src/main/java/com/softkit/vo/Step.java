@@ -1,27 +1,36 @@
 package com.softkit.vo;
 
 public enum Step {
+    START,
+    CANDIDATE,
+    SPECIALISATIONS,
+    TECHNOLOGIES,
+    EXPERIENCE,
+    ENGLISH_LEVEL,
+    CITY_OR_LOCATION,
+    EMPLOYMENT,
+    MIN_SALARY,
+    MAX_SALARY,
+    DONE_BASIC_REGISTRATION,
+    PHONE,
+    AGE,
+    SUMMARY,
+    DONE_REGISTRATION;
 
-    START(1),
-    CANDIDATE(2),
-    SPECIALISATIONS(3);
+    private int stepId;
 
-    private final int step;
-
-    Step(int step) {
-        this.step = step;
+    private void setStepId(int stepId) {
+        this.stepId = stepId;
     }
 
-    public int getStepIntId() {
-        return step;
+    public int getStepId() {
+        return stepId;
     }
 
-    public static Step getStepById(int id) {
-        for (Step value : values()) {
-            if (value.step == id) {
-                return value;
-            }
+    static {
+        for (int i = 0; i < values().length; i++) {
+            values()[i].setStepId(i + 1);
         }
-        return null;
     }
+
 }

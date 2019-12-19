@@ -19,9 +19,9 @@ public class DefaultStatus extends AbstractStep {
 
         if (UpdateTool.getUpdateMessage(update).text().contentEquals(StepHolder.getStartCommand())) {
             nextStep = Step.CANDIDATE;
-            outgoingMessage = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getBotMessage).get();
+            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(UserStatus::getBotMessage).get();
         } else
-            outgoingMessage = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getUserMistakeResponse).get();
+            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(UserStatus::getUserMistakeResponse).get();
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }

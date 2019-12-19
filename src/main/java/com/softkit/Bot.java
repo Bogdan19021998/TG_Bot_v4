@@ -3,16 +3,9 @@ package com.softkit;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.GetUpdates;
-import com.softkit.repository.UserRepository;
-import com.softkit.steps.StepHolder;
-import com.softkit.vo.UpdateTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 @Component
 @Scope("singleton")

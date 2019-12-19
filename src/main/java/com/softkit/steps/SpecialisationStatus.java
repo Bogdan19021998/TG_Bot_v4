@@ -6,18 +6,25 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
+import com.softkit.database.UserSpecializations;
 import com.softkit.database.UserStatus;
+import com.softkit.repository.SpecialisationRepository;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.vo.UpdateTool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Component
 public class SpecialisationStatus extends AbstractStep {
+
+    @Autowired
+    SpecialisationRepository specialisationRepository;
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
@@ -27,9 +34,9 @@ public class SpecialisationStatus extends AbstractStep {
         if (UpdateTool.isCallback(update)) {
             String data = update.callbackQuery().data();
             System.out.println(data);
-            outgoingMessage = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getBotMessage).get();
+            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(UserStatus::getBotMessage).get();
         } else
-            outgoingMessage = this.userStatusRepository.findById(nextStep.getStepIntId()).map(UserStatus::getUserMistakeResponse).get();
+            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(UserStatus::getUserMistakeResponse).get();
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }
@@ -42,8 +49,11 @@ public class SpecialisationStatus extends AbstractStep {
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
-        List<String> specialisations = Stream.of(".NET", "Front-End / JS", "Android", "Node.js", "C/C++", "PHP", "Golang",
-                "Python", "iOS", "Ruby / Rails", "Java", "Scala", "Завершить").collect(Collectors.toList());
+
+
+        List<String> specialisations = new ArrayList<>();
+
+        specialisationRepository.findAll().forEach(specialization -> specialisations.add(specialization.getSpecializationDescription()));
 
         InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, 2);
 

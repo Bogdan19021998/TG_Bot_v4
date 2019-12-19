@@ -15,10 +15,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     default User setNewStep(Integer userId, Step step) {
         Optional<User> optionalUser = findUserByUserId(userId);
         User user = optionalUser.orElse(new User(userId));
-        user.setUserStatus(step.getStepIntId());
+        user.setStep(step);
         save(user);
         return user;
     }
-
 
 }
