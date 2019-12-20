@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,13 +15,11 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @NotNull
-@EqualsAndHashCode
 public class User {
 
     @Id
     @Column( unique = true )
     @Setter( value = AccessLevel.NONE )
-    @EqualsAndHashCode.Include
     private Integer userId;
 
     @Enumerated(EnumType.ORDINAL)
@@ -54,5 +53,18 @@ public class User {
     public User( Integer userId ) {
         this.userId = userId;
         setStep(Step.START);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }

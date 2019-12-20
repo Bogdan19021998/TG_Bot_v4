@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.database.Status;
 import com.softkit.repository.SpecialisationRepository;
+import com.softkit.repository.UserSpecialisationsRepository;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
@@ -15,12 +16,15 @@ import com.softkit.vo.UpdateTool;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class SpecialisationStatus extends AbstractStep {
 
     private SpecialisationRepository specialisationRepository;
+    private UserSpecialisationsRepository userSpecialisationsRepository;
 
     public SpecialisationStatus(UserStatusRepository userStatusRepository, SpecialisationRepository specialisationRepository) {
         super(userStatusRepository);
@@ -36,12 +40,12 @@ public class SpecialisationStatus extends AbstractStep {
             String data = update.callbackQuery().data();
             System.out.println(data);
 
-//            if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
-//
-//            }
+            if (data.contentEquals(StepHolder.FINISH_SELECTION) && user.getSpecializations().size() >= 1 && user.getSpecializations().size() <= 5) {
+                nextStep = Step.TECHNOLOGIES;
+                outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
+            } else {
 
-            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
-
+            }
 
         } else
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();

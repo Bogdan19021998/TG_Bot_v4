@@ -18,7 +18,7 @@ public class Experience {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    @Setter( value = AccessLevel.NONE )
+    @Setter( value = AccessLevel.NONE )
 //    @EqualsAndHashCode.Include
     private Integer experienceId;
 

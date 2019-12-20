@@ -8,6 +8,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+
 @Component
 @AllArgsConstructor
 public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
@@ -20,9 +22,9 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     EnglishLevelRepository englishLevelRepository;
     CityRepository cityRepository;
 
-    @Autowired
-    UserSpecialisationsRepository usr;
-
+//    @Autowired
+//    UserSpecialisationsRepository usr;
+//
 
 
     @Override
@@ -38,7 +40,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         initEnglishLevel();
         initEmployment();
 
-        userMappingTest();
+//        userMappingTest();
     }
 
     private void initStatuses() {
@@ -238,15 +240,16 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         cityRepository.save( new City("Запорожье") );
     }
 
-    private void userMappingTest() {
-
-        User user = userRepository.save(new User(3));
-        usr.save(new UserSpecialization(user, specializationRepository.findById(3).get()));
+//    private void userMappingTest() {
+//
+//        User user = userRepository.save(new User(3));
+//        Specialization specialization = specializationRepository.findById(3).get();
+//        usr.save( new UserSpecialization(user, specialization ) );
 //        usr.save(new UserSpecialization(user, specializationRepository.findById(4).get()));
 //        usr.save(new UserSpecialization(user, specializationRepository.findById(2).get()));
 //        usr.save(new UserSpecialization(user, specializationRepository.findById(5).get()));
-        userRepository.save(user);
-        System.out.println(userRepository.findUserByUserId(3).get().getSpecializations().size());
-    }
+//        userRepository.save(user);
+//        System.out.println(Arrays.toString(userRepository.findUserByUserId(3).get().getSpecializations().toArray()));
+//    }
 
 }

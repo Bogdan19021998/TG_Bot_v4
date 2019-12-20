@@ -1,7 +1,6 @@
 package com.softkit.database;
 
 import lombok.*;
-import org.springframework.context.annotation.Primary;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
