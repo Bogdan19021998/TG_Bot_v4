@@ -12,12 +12,11 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findUserByUserId(Integer userId);
 
-    default User setNewStep(Integer userId, Step step) {
+    default void setNewStep(Integer userId, Step step) {
         Optional<User> optionalUser = findUserByUserId(userId);
         User user = optionalUser.orElse(new User(userId));
         user.setStep(step);
         save(user);
-        return user;
     }
 
 }

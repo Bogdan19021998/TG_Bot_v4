@@ -4,7 +4,8 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
-import com.softkit.database.UserStatus;
+import com.softkit.database.Status;
+import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CandidateStatus extends AbstractStep {
+
+    public CandidateStatus(UserStatusRepository userStatusRepository) {
+        super(userStatusRepository);
+    }
 
     public UpdateProcessorResult process(Update update, User user) {
 
@@ -25,9 +30,9 @@ public class CandidateStatus extends AbstractStep {
         if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(outgoingMessage)) {
             user.setCandidate(TextParser.fixSpacing(outgoingMessage));
             nextStep = Step.SPECIALISATIONS;
-            botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(UserStatus::getBotMessage).get();
+            botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {
-            botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(UserStatus::getUserMistakeResponse).get();
+            botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         }
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, botText), nextStep, user);

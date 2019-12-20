@@ -1,33 +1,33 @@
 package com.softkit.database;
 
-
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @NotNull
 @EqualsAndHashCode
-public class Employment {
+public class Technology {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
-    private Integer employmentId;
+    private Integer technologyId;
 
-    private String employmentDescription;
+    private String technologyDescription;
 
     private Timestamp dateAdded;
 
-    public Employment(String employmentDescription) {
-        this.employmentDescription = employmentDescription;
+    public Technology(String technologyDescription ) {
+        this.technologyDescription = technologyDescription;
         this.dateAdded = new Timestamp(System.currentTimeMillis());
     }
-
 }

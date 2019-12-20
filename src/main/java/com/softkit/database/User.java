@@ -6,6 +6,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="user_table")
@@ -20,12 +22,6 @@ public class User {
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
     private Integer userId;
-
-//    @OneToMany( cascade = CascadeType.ALL )
-//    @JoinColumn(name="user_default_specializations_specialization_id", referencedColumnName = "specialization_id")
-//    @JoinColumn(name="user_default_specializations_specialization_id")
-//    @ElementCollection
-//    Set<UserDefaultSpecializations> userDefaultSpecializations;
 
     @Enumerated(EnumType.ORDINAL)
     private Step step;
@@ -42,6 +38,18 @@ public class User {
     private String referralLink;
     private Timestamp registrationTimestamp;
     private Timestamp dataEditTimestamp;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<UserSpecialization> specializations = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<UserTechnology> technologies = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Referral> referrals = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<UserEmployment> employments = new HashSet<>();
 
     public User( Integer userId ) {
         this.userId = userId;

@@ -3,7 +3,6 @@ package com.softkit;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.GetUpdates;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -11,16 +10,16 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class Bot extends TelegramBot {
 
-    private final GetUpdates getUpdates;
-    @Autowired
+    private GetUpdates getUpdates;
     private DefaultUpdateProcessor updateProcessor;
 
     private static String token = "1032578818:AAEcsGFQ46oLcenajdG7vUB_jPyuazzdqIk";
 
-    private Bot() {
+    private Bot(DefaultUpdateProcessor updateProcessor) {
         super(token);
         getUpdates = new GetUpdates().limit(1).offset(0).timeout(100);
         start();
+        this.updateProcessor = updateProcessor;
     }
 
     private void start() {

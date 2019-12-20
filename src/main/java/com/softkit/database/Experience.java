@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -23,8 +24,11 @@ public class Experience {
 
     private String experienceDescription;
 
+    private Timestamp dateAdded;
+
     public Experience(String experienceDescription ) {
         this.experienceDescription = experienceDescription;
+        this.dateAdded = new Timestamp(System.currentTimeMillis());
     }
 
 }

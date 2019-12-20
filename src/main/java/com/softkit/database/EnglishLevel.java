@@ -1,12 +1,14 @@
 package com.softkit.database;
 
 import lombok.*;
+import org.springframework.context.annotation.Primary;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -23,8 +25,11 @@ public class EnglishLevel {
 
     private String englishLevelDescription;
 
+    private Timestamp dateAdded;
+
     public EnglishLevel( String englishLevelDescription )
     {
         this.englishLevelDescription = englishLevelDescription;
+        this.dateAdded = new Timestamp(System.currentTimeMillis());
     }
 }

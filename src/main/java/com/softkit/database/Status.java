@@ -19,10 +19,9 @@ import javax.validation.constraints.NotNull;
 @Setter(value = AccessLevel.NONE )
 @NotNull
 @EqualsAndHashCode
-public class UserStatus {
+public class Status {
 
     @Id
-  //  @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(unique = true)
     @EqualsAndHashCode.Include
     @Enumerated(EnumType.ORDINAL)

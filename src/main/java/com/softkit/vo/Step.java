@@ -15,22 +15,5 @@ public enum Step {
     PHONE,
     AGE,
     SUMMARY,
-    DONE_REGISTRATION;
-
-    private int stepId;
-
-    private void setStepId(int stepId) {
-        this.stepId = stepId;
-    }
-
-    public int getStepId() {
-        return stepId;
-    }
-
-    static {
-        for (int i = 0; i < values().length; i++) {
-            values()[i].setStepId(i + 1);
-        }
-    }
-
+    DONE_REGISTRATION
 }

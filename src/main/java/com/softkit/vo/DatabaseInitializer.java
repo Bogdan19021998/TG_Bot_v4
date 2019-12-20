@@ -3,6 +3,7 @@ package com.softkit.vo;
 import com.softkit.database.*;
 import com.softkit.repository.*;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -13,11 +14,14 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
 
     UserRepository userRepository;
     UserStatusRepository userStatusRepository;
-    SpecialisationRepository userSpecializationRepository;
+    SpecialisationRepository specializationRepository;
     EmploymentRepository employmentRepository;
     ExperienceRepository experienceRepository;
     EnglishLevelRepository englishLevelRepository;
     CityRepository cityRepository;
+
+    @Autowired
+    UserSpecialisationsRepository usr;
 
 
 
@@ -33,17 +37,19 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         initExperience();
         initEnglishLevel();
         initEmployment();
+
+        userMappingTest();
     }
 
     private void initStatuses() {
         // 1
-        UserStatus defStatus = new UserStatus(
+        Status defStatus = new Status(
                 Step.START,
                 "new user",
                 "Привет, я могу помочь тебе найти идеальную ИТ вакансию ",
                 "Нажми /start, чтобы начать");
         // 2
-        UserStatus candidateStatus = new UserStatus(
+        Status candidateStatus = new Status(
                 Step.CANDIDATE,
                 "name surname",
                 "Для начала напиши мне свое имя и фамилию",
@@ -51,7 +57,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "В этих данных не может быть чисел, ссылок и прочего. Только текст, состоящий " +
                         "из двух или трех отдельно написанных слов. Попробуй еще раз.\n");
         // 3
-        UserStatus specStatus = new UserStatus(
+        Status specStatus = new Status(
                 Step.SPECIALISATIONS,
                 "user specialisations",
                 "Превосходно, теперь укажи свою специализацию нажав на соответствующие кнопки. " +
@@ -60,7 +66,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                 "Обрати внимание, что ты должен выбрать минимум один язык программирования или же несколько, " +
                         "но не больше пяти. По окончанию нажми на кнопку Завершить");
         // 4
-        UserStatus techStatus = new UserStatus(
+        Status techStatus = new Status(
                 Step.TECHNOLOGIES,
                 "user technologies",
                 "Ты можешь дополнить свою анкету, написав дополнительные технологии, с \n" +
@@ -71,26 +77,26 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "сообщением. Также ты можешь пропустить этот шаг нажав на соответствующую \n" +
                         "кнопку ");
         // 5
-        UserStatus userExperience = new UserStatus(
+        Status userExperience = new Status(
                 Step.EXPERIENCE,
                 "user experience",
                 "Укажи свой опыт работы нажав на соответствующую кнопку",
                 "");
         // 6
-        UserStatus userEnglishLevel = new UserStatus(
+        Status userEnglishLevel = new Status(
                 Step.ENGLISH_LEVEL,
                 "user english level",
                 "Укажи свой уровень английского нажав на соответствующую кнопку",
                 "");
         // 7
-        UserStatus userCity = new UserStatus(
+        Status userCity = new Status(
                 Step.CITY_OR_LOCATION,
                 "new user",
                 "Укажи свой город нажав на соответствующую кнопку с названием города. Если \n" +
                         "твоего города нету в списке - нажми на кнопку Поделиться локацией.",
                 "");
         // 8
-        UserStatus userEmployment = new UserStatus(
+        Status userEmployment = new Status(
                 Step.EMPLOYMENT,
                 "user employment",
                 "Скажи приемлемый для тебя вид занятости нажав на соответствующие кнопки. Ты \n" +
@@ -99,7 +105,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                 "Обрати внимание, что ты должен выбрать минимум один вид занятости. По \n" +
                         "окончанию нажми на кнопку Завершить.");
         // 9
-        UserStatus userMinMoney = new UserStatus(
+        Status userMinMoney = new Status(
                 Step.MIN_SALARY,
                 "user min salary",
                 "СТеперь мне нужно уточнить у тебя приемлемую зарплатную вилку, для более \n" +
@@ -109,7 +115,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "$ от которой ты готов работать. Этими данными должно быть только число (не \n" +
                         "менее двузначного и не более пятизначного). Попробуй еще раз..");
         // 10
-        UserStatus userMaxMoney = new UserStatus(
+        Status userMaxMoney = new Status(
                 Step.MAX_SALARY,
                 "user max salary",
                 "Теперь пришли мне зарплату в $ которая по твоему мнению на 100% соответствует\n" +
@@ -119,7 +125,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "должно быть только число (не менее двузначного и не более пятизначного). \n" +
                         "Попробуй еще раз.");
         // 11
-        UserStatus userDoneBasicRegistration = new UserStatus(
+        Status userDoneBasicRegistration = new Status(
                 Step.DONE_BASIC_REGISTRATION,
                 "user done basic registration",
                 "Теперь у меня есть все базовые данные для поиска подходящей вакансии. Ты \n" +
@@ -130,7 +136,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "/profile",
                 "");
         // 12
-        UserStatus userPhone = new UserStatus(
+        Status userPhone = new Status(
                 Step.PHONE,
                 "user phone",
                 "Круто, что ты решил поделиться дополнительной информацией. Для начала мне \n" +
@@ -138,7 +144,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "кнопку под сообщением. Ты можешь пропустить этот шаг.",
                 "");
         // 13
-        UserStatus userAge = new UserStatus(
+        Status userAge = new Status(
                 Step.AGE,
                 "user age",
                 "Теперь введи свой возраст. Примечание: тебе должно быть больше 18 лет. Вводи" +
@@ -146,7 +152,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                 "Я не могу распознать введенную тобой информацию как возраст. Этими данными \n" +
                         "должно быть только двузначное число. Попробуй еще раз.");
         // 14
-        UserStatus userResume = new UserStatus(
+        Status userResume = new Status(
                 Step.SUMMARY,
                 "user summary",
                 "Осталось только резюме. Пришли его мне в pdf формате. Для этого слева от \n" +
@@ -154,7 +160,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
                         "можешь пропустить этот шаг. ",
                 "");
         // 15
-        UserStatus userDoneRegistration = new UserStatus(
+        Status userDoneRegistration = new Status(
                 Step.DONE_REGISTRATION,
                 "user done registration",
                 "Круто! Теперь у меня есть вся необходимая информация для поиска подходящей \n" +
@@ -184,20 +190,20 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     }
 
     private void initSpecialisations() {
-        userSpecializationRepository.save( new Specialization(".NET"));
-        userSpecializationRepository.save( new Specialization("Front-End / JS"));
-        userSpecializationRepository.save( new Specialization("Android"));
-        userSpecializationRepository.save( new Specialization("Node.js"));
-        userSpecializationRepository.save( new Specialization("C/C++"));
+        specializationRepository.save( new Specialization(".NET"));
+        specializationRepository.save( new Specialization("Front-End / JS"));
+        specializationRepository.save( new Specialization("Android"));
+        specializationRepository.save( new Specialization("Node.js"));
+        specializationRepository.save( new Specialization("C/C++"));
 
-        userSpecializationRepository.save( new Specialization("PHP"));
-        userSpecializationRepository.save( new Specialization("Golang"));
-        userSpecializationRepository.save( new Specialization("Python"));
-        userSpecializationRepository.save( new Specialization("iOS"));
-        userSpecializationRepository.save( new Specialization("Ruby / Rails"));
+        specializationRepository.save( new Specialization("PHP"));
+        specializationRepository.save( new Specialization("Golang"));
+        specializationRepository.save( new Specialization("Python"));
+        specializationRepository.save( new Specialization("iOS"));
+        specializationRepository.save( new Specialization("Ruby / Rails"));
 
-        userSpecializationRepository.save( new Specialization("Java"));
-        userSpecializationRepository.save( new Specialization("Scala"));
+        specializationRepository.save( new Specialization("Java"));
+        specializationRepository.save( new Specialization("Scala"));
     }
 
     private void initExperience() {
@@ -230,6 +236,17 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         cityRepository.save( new City("Одесса") );
         cityRepository.save( new City("Днепр") );
         cityRepository.save( new City("Запорожье") );
+    }
+
+    private void userMappingTest() {
+
+        User user = userRepository.save(new User(3));
+        usr.save(new UserSpecialization(user, specializationRepository.findById(3).get()));
+//        usr.save(new UserSpecialization(user, specializationRepository.findById(4).get()));
+//        usr.save(new UserSpecialization(user, specializationRepository.findById(2).get()));
+//        usr.save(new UserSpecialization(user, specializationRepository.findById(5).get()));
+        userRepository.save(user);
+        System.out.println(userRepository.findUserByUserId(3).get().getSpecializations().size());
     }
 
 }

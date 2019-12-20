@@ -14,12 +14,17 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NotNull
 @EqualsAndHashCode
-public class UserTechnologies {
+public class UserTechnology {
 
     @Id
     @Column( unique = true )
     @EqualsAndHashCode.Include
     private Integer id;
 
-    private String technology;
+    @ManyToOne
+    private Technology technology;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
