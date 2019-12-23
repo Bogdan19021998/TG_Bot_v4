@@ -24,10 +24,12 @@ public class User {
 
     @Enumerated(EnumType.ORDINAL)
     private Step step;
+//    todo rename
     private String candidate;
     private Integer age;
-    private Integer experience;
+    //    todo add enum value
     private Integer englishLevel;
+    //    todo add enum value
     private Integer city;
     private Integer userLocation;
     private Integer salaryFrom;
@@ -50,8 +52,13 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserEmployment> employments = new HashSet<>();
 
+    @OneToOne
+//    todo add enum value
+    private Experience experience;
+
     public User( Integer userId ) {
         this.userId = userId;
+//        todo remove this
         setStep(Step.START);
     }
 
