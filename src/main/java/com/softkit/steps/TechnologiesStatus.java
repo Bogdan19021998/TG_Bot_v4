@@ -24,12 +24,14 @@ public class TechnologiesStatus extends AbstractStep {
 
         outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
 
+
+
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }
 
     @Override
     public Step getStepId() {
-        return Step.START;
+        return Step.TECHNOLOGIES;
     }
 
     @Override

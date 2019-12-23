@@ -53,6 +53,7 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
                     isSent = messageSender.send(request);
                     if (isSent) {
                         userRepository.setNewStep(userId, result.getNextStep());
+                        System.out.println("user " + UpdateTool.getUserId(update) + " set status " + result.getNextStep());
                     }
                 }
 

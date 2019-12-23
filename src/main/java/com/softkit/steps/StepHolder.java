@@ -17,6 +17,7 @@ public class StepHolder {
     private final DefaultStatus defaultStatus;
     private final CandidateStatus candidateStatus;
     private final SpecialisationStatus specialisationStatus;
+    private final TechnologiesStatus technologiesStatus;
 
     public static final String FINISH_SELECTION = "com.softkit.FINISH_SELECTION";
     private static final String START_COMMAND = "/start";
@@ -27,6 +28,7 @@ public class StepHolder {
         ALL_STEPS.put(START, defaultStatus);
         ALL_STEPS.put(CANDIDATE, candidateStatus);
         ALL_STEPS.put(SPECIALISATIONS, specialisationStatus);
+        ALL_STEPS.put(TECHNOLOGIES, technologiesStatus);
     }
 
     public AbstractStep getStep(Step step) {

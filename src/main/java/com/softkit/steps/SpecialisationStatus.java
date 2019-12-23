@@ -3,8 +3,8 @@ package com.softkit.steps;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.request.BaseRequest;
-import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.model.request.ParseMode;
+import com.pengrad.telegrambot.request.*;
 import com.softkit.database.User;
 import com.softkit.database.Status;
 import com.softkit.repository.SpecialisationRepository;
@@ -16,19 +16,18 @@ import com.softkit.vo.UpdateTool;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 public class SpecialisationStatus extends AbstractStep {
 
     private SpecialisationRepository specialisationRepository;
-    private UserSpecialisationsRepository userSpecialisationsRepository;
+    private final UserSpecialisationsRepository userSpecialisationsRepository;
 
-    public SpecialisationStatus(UserStatusRepository userStatusRepository, SpecialisationRepository specialisationRepository) {
+    public SpecialisationStatus(UserStatusRepository userStatusRepository, SpecialisationRepository specialisationRepository, UserSpecialisationsRepository userSpecialisationsRepository) {
         super(userStatusRepository);
         this.specialisationRepository = specialisationRepository;
+        this.userSpecialisationsRepository = userSpecialisationsRepository;
     }
 
     @Override
@@ -38,13 +37,38 @@ public class SpecialisationStatus extends AbstractStep {
 
         if (UpdateTool.isCallback(update)) {
             String data = update.callbackQuery().data();
-            System.out.println(data);
+            boolean hasMarker = UpdateTool.hasMarker(data);
+
 
             if (data.contentEquals(StepHolder.FINISH_SELECTION) && user.getSpecializations().size() >= 1 && user.getSpecializations().size() <= 5) {
                 nextStep = Step.TECHNOLOGIES;
-                outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
+                outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
             } else {
 
+                InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
+                InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByText(inlineKeyboardMarkup.inlineKeyboard(), data);
+
+                if (inlineKeyboardButton != null) {
+//                if (userSpecialisationsRepository.hasUserSpecialisation(user.getUserId(), data)) {
+                    if (hasMarker) {
+                        userSpecialisationsRepository.removeUserSpecialisation(user.getUserId(), data);
+                        inlineKeyboardButton = UpdateTool.removeMarkerFromButton(inlineKeyboardButton);
+                        outgoingMessage = "Ты отменил выбор специализации: " + inlineKeyboardButton.text() + ".";
+                    } else {
+                        userSpecialisationsRepository.addUserSpecialisation(user.getUserId(), data);
+                        inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
+                        outgoingMessage = "Круто, ты выбрал специализацию: " + data +
+                                ". Можешь выбрать еще несколько или завершить этот этап.";
+                    }
+
+                    UpdateTool.changeButtonByText(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
+
+                    EditMessageText editMessageText = new EditMessageText(chatId, update.callbackQuery().message().messageId(), outgoingMessage);
+                    editMessageText.replyMarkup(inlineKeyboardMarkup);
+                    editMessageText.parseMode(ParseMode.Markdown);
+
+                    return new UpdateProcessorResult(chatId, editMessageText, nextStep, user);
+                }
             }
 
         } else
@@ -65,7 +89,6 @@ public class SpecialisationStatus extends AbstractStep {
         specialisationRepository.findAll().forEach(specialization -> specialisations.add(specialization.getSpecializationDescription()));
 
         InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, 2);
-
         return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
     }
 }

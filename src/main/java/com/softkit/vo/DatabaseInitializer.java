@@ -22,10 +22,8 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     EnglishLevelRepository englishLevelRepository;
     CityRepository cityRepository;
 
-//    @Autowired
-//    UserSpecialisationsRepository usr;
-//
-
+////    UserSpecialisationsRepository usr;
+////
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
