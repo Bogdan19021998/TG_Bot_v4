@@ -14,3 +14,4 @@ Lazy initialization
 Read about indexes in postgresql
 
 Check flyway https://flywaydb.org/
+
