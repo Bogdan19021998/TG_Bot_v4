@@ -1,7 +1,8 @@
-package com.softkit.vo;
+package com.softkit;
 
 import com.softkit.database.*;
 import com.softkit.repository.*;
+import com.softkit.vo.Step;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -19,15 +20,13 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     ExperienceRepository experienceRepository;
     EnglishLevelRepository englishLevelRepository;
     CityRepository cityRepository;
-
-    @Autowired
     UserSpecialisationsRepository usr;
 
 
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        initData();
+//        initData();
     }
 
     private void initData() {

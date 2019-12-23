@@ -12,6 +12,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findUserByUserId(Integer userId);
 
+//    todo remove it from here
     default void setNewStep(Integer userId, Step step) {
         Optional<User> optionalUser = findUserByUserId(userId);
         User user = optionalUser.orElse(new User(userId));

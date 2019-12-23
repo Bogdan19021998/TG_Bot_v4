@@ -3,6 +3,7 @@ package com.softkit.database;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
 @Entity
@@ -17,8 +18,9 @@ public class City {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
-    private long cityId;
+    private Long cityId;
 
+    @NotNull
     private String cityName;
 
     private Timestamp dateAdded;

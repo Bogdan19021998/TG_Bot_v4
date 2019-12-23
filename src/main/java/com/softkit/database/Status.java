@@ -16,9 +16,10 @@ import javax.validation.constraints.NotNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter(value = AccessLevel.NONE )
+@Setter(value = AccessLevel.NONE)
 @NotNull
 @EqualsAndHashCode
+//todo don't save statuses to the DB
 public class Status {
 
     @Id

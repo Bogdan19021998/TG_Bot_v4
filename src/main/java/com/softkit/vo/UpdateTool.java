@@ -42,6 +42,9 @@ public class UpdateTool {
 
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns) {
 
+//        todo is it java? buttons_count
+
+//        exist button for all keyboards
         int buttons_count = strings.size() + 1;   // +1 for exit button
         int rows = (buttons_count + (columns - 1) ) / columns; // rows count ( + (columns - 1) for odd buttons_count )
         // last row length including exit button

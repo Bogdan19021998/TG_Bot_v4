@@ -13,13 +13,11 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @NotNull
-//@EqualsAndHashCode
 public class Experience {
+//    todo remove this
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-//    @Setter( value = AccessLevel.NONE )
-//    @EqualsAndHashCode.Include
     private Integer experienceId;
 
     private String experienceDescription;

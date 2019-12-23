@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+//todo rename
 public class SpecialisationStatus extends AbstractStep {
 
     private SpecialisationRepository specialisationRepository;
@@ -62,6 +63,6 @@ public class SpecialisationStatus extends AbstractStep {
 
         InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, 2);
 
-        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
+        return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
     }
 }
