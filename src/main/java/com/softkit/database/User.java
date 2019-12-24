@@ -1,5 +1,8 @@
 package com.softkit.database;
 
+import com.softkit.vo.City;
+import com.softkit.vo.EnglishLevel;
+import com.softkit.vo.Experience;
 import com.softkit.vo.Step;
 import lombok.*;
 
@@ -7,7 +10,6 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -15,20 +17,24 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @NotNull
+@EqualsAndHashCode
 public class User {
 
     @Id
     @Column( unique = true )
     @Setter( value = AccessLevel.NONE )
+    @EqualsAndHashCode.Include
     private Integer userId;
 
     @Enumerated(EnumType.ORDINAL)
     private Step step;
+//    todo rename
     private String candidate;
     private Integer age;
-    private Integer experience;
-    private Integer englishLevel;
-    private Integer city;
+    @Enumerated(EnumType.ORDINAL)
+    private EnglishLevel englishLevel;
+    @Enumerated(EnumType.ORDINAL)
+    private City city;
     private Integer userLocation;
     private Integer salaryFrom;
     private Integer salaryUpTo;
@@ -50,21 +56,12 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<UserEmployment> employments = new HashSet<>();
 
+    @Enumerated(EnumType.ORDINAL)
+    private Experience experience;
+
     public User( Integer userId ) {
         this.userId = userId;
+//        todo remove this
         setStep(Step.START);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(userId, user.userId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId);
     }
 }

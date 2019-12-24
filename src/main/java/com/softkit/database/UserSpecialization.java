@@ -1,5 +1,6 @@
 package com.softkit.database;
 
+import com.softkit.vo.Specialization;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class UserSpecialization {
     @GeneratedValue
     private Integer id;
 
-    @ManyToOne
+    @Enumerated(EnumType.ORDINAL)
     private Specialization specialization;
 
     @ManyToOne

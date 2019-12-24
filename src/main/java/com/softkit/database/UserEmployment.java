@@ -1,5 +1,6 @@
 package com.softkit.database;
 
+import com.softkit.vo.Employment;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ public class UserEmployment {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @ManyToOne
+    @Enumerated(EnumType.ORDINAL)
     private Employment employment;
 
     @ManyToOne

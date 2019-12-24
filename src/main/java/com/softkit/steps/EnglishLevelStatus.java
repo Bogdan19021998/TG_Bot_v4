@@ -7,34 +7,27 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
 import com.softkit.database.User;
 import com.softkit.repository.UserStatusRepository;
-import com.softkit.repository.UserTechnologyRepository;
-import com.softkit.vo.Step;
-import com.softkit.vo.TextParser;
-import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.vo.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Component
-public class TechnologiesStatus extends AbstractStep {
+public class EnglishLevelStatus extends AbstractStep {
 
-    private UserTechnologyRepository userTechnologyRepository;
-
-    public TechnologiesStatus(UserStatusRepository userStatusRepository, UserTechnologyRepository userTechnologyRepository) {
+    public EnglishLevelStatus(UserStatusRepository userStatusRepository) {
         super(userStatusRepository);
-        this.userTechnologyRepository = userTechnologyRepository;
     }
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
 
-        String userText = UpdateTool.getUpdateMessage(update).text();
-
-        if (TextParser.isEngLettDigSpecSymbText(userText) || (UpdateTool.isCallback(update) && update.callbackQuery().data().contentEquals(StepHolder.FINISH_SELECTION)) ) {
-            nextStep = Step.EXPERIENCE;
-            userTechnologyRepository.saveTechnologies(userText);
+        if (UpdateTool.isCallback(update)) {
+            nextStep = Step.CITY_OR_LOCATION;
+            user.setEnglishLevel(EnglishLevel.valueOf(update.callbackQuery().data()));
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
@@ -45,14 +38,20 @@ public class TechnologiesStatus extends AbstractStep {
 
     @Override
     public Step getStepId() {
-        return Step.TECHNOLOGIES;
+        return Step.ENGLISH_LEVEL;
     }
 
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
+        List<String> experiences = new ArrayList<>();
+        Stream.of(EnglishLevel.values()).forEach(experience -> experiences.add(experience.getDescription()));
+
+        List<String> callbacks = new ArrayList<>();
+        Stream.of(EnglishLevel.values()).forEach(experience -> callbacks.add(experience.name()));
+
         return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArrayWithExitButton(new ArrayList<>()))
+                new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, false))
         );
     }
 

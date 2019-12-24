@@ -3,15 +3,16 @@ package com.softkit.steps;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.request.*;
-import com.softkit.database.User;
+import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.request.EditMessageText;
+import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
-import com.softkit.repository.UserSpecialisationsRepository;
+import com.softkit.database.User;
+import com.softkit.database.UserEmployment;
+import com.softkit.repository.UserEmploymentRepository;
 import com.softkit.repository.UserStatusRepository;
-import com.softkit.vo.Specialization;
-import com.softkit.vo.Step;
-import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.vo.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -19,18 +20,17 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
-public class SpecialisationStatus extends AbstractStep {
+public class EmploymentStatus extends AbstractStep {
 
-    private final UserSpecialisationsRepository userSpecialisationsRepository;
+    private final UserEmploymentRepository userEmploymentRepository;
 
-    public SpecialisationStatus(UserStatusRepository userStatusRepository,UserSpecialisationsRepository userSpecialisationsRepository) {
+    public EmploymentStatus(UserStatusRepository userStatusRepository, UserEmploymentRepository userEmploymentRepository) {
         super(userStatusRepository);
-        this.userSpecialisationsRepository = userSpecialisationsRepository;
+        this.userEmploymentRepository = userEmploymentRepository;
     }
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
-
         Long chatId = UpdateTool.getChatId(update);
 
         outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
@@ -42,12 +42,11 @@ public class SpecialisationStatus extends AbstractStep {
             boolean hasMarker = UpdateTool.hasMarker(data);
 
             if (data.contentEquals(StepHolder.FINISH_SELECTION) &&
-                    ( user.getSpecializations().size() >= 1 && user.getSpecializations().size() <= 5 || true ) // debug .. remove " || true "
+                    ( user.getEmployments().size() >= 1 || true ) // debug .. remove " || true "
             ) {
-                nextStep = Step.TECHNOLOGIES;
+                nextStep = Step.MIN_SALARY;
                 outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
                 botAnswer = new SendMessage(chatId, outgoingMessage);
-
             } else {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
@@ -55,18 +54,16 @@ public class SpecialisationStatus extends AbstractStep {
 
                 if (inlineKeyboardButton != null) {
                     if (hasMarker) {
-                        userSpecialisationsRepository.removeUserSpecialisation(user.getUserId(), data);
+                        userEmploymentRepository.removeUserEmployment(user.getUserId(), data);
                         inlineKeyboardButton = UpdateTool.removeMarkerFromButton(inlineKeyboardButton);
-                        outgoingMessage = "Ты отменил выбор специализации: " + inlineKeyboardButton.text() + ".";
                     } else {
-                        userSpecialisationsRepository.addUserSpecialisation(user.getUserId(), data);
+                        userEmploymentRepository.addUserEmployment(user.getUserId(), data);
                         inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
-                        outgoingMessage = "Круто, ты выбрал специализацию: " + data +
-                                ". Можешь выбрать еще несколько или завершить этот этап.";
                     }
 
                     UpdateTool.changeButtonByText(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
 
+                    outgoingMessage = UpdateTool.getUpdateMessage(update).text();
                     EditMessageText editMessageText = new EditMessageText(chatId, update.callbackQuery().message().messageId(), outgoingMessage);
                     editMessageText.replyMarkup(inlineKeyboardMarkup);
                     botAnswer = editMessageText;
@@ -80,15 +77,21 @@ public class SpecialisationStatus extends AbstractStep {
 
     @Override
     public Step getStepId() {
-        return Step.SPECIALISATIONS;
+        return Step.EMPLOYMENT;
     }
 
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
-        List<String> specialisations = new ArrayList<>();
-        Stream.of(Specialization.values()).forEach(specialization -> specialisations.add(specialization.getDescription()));
-        InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, 2, true);
-        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
+        List<String> experiences = new ArrayList<>();
+        Stream.of(Employment.values()).forEach(experience -> experiences.add(experience.getDescription()));
+
+        List<String> callbacks = new ArrayList<>();
+        Stream.of(Employment.values()).forEach(experience -> callbacks.add(experience.name()));
+
+        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
+                new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, true))
+        );
     }
+
 }

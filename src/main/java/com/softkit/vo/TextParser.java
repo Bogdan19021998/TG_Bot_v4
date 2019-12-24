@@ -21,16 +21,26 @@ public class TextParser {
         return true;
     }
 
-    public static boolean isDigitsText(String text) {
+    public static boolean isEngLettDigSpecSymbText(String text) {
         for (int i = 0; i < text.length(); i++) {
-            if ( !Character.isDigit(text.charAt(i)) ) {
+            if ((int) text.charAt(i) < 32 || (int) text.charAt(i) > 126) {
                 return false;
             }
         }
         return true;
     }
 
+    public static boolean isIntegerText(String text) {
+        for (int i = 0; i < text.length(); i++) {
+            if ( !Character.isDigit(text.charAt(i)) ) {
+                return false;
+            }
+        }
+        return text.length() < 11 && Long.parseLong(text) <= Integer.MAX_VALUE;
+    }
+
     public static boolean isEnglishText(String text) {
         return false;
     }
+
 }

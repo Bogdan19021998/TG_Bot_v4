@@ -42,31 +42,62 @@ public class UpdateTool {
         return null;
     }
 
-    public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns) {
+    public static InlineKeyboardButton[][] getButtonArray(List<String> strings) {
+        return getButtonArray(strings, strings,1, false);
+    }
 
-        int buttons_count = strings.size() + 1;   // +1 for exit button
+    public static InlineKeyboardButton[][] getButtonArrayWithExitButton(List<String> strings) {
+        return getButtonArray(strings, strings,1, true);
+    }
+
+    public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns, boolean exitButton) {
+        return getButtonArray(strings, strings, columns, exitButton);
+    }
+
+    public static InlineKeyboardButton[][] getButtonArray(List<String> strings, List<String> callbacks, int columns, boolean exitButton) {
+
+        if (callbacks.size() != strings.size()) {
+            System.out.println("NOT EQUALS SISES!!!");
+            callbacks = strings;
+        }
+
+        int buttons_count;
+
+        if (exitButton) {
+            buttons_count = strings.size() + 1;   // +1 for exit button
+        } else {
+            buttons_count = strings.size();
+        }
+
+        if (buttons_count == 0) {
+            return new InlineKeyboardButton[0][0];
+        }
+
         int rows = (buttons_count + (columns - 1)) / columns; // rows count ( + (columns - 1) for odd buttons_count )
-        // last row length including exit button
         int lastRowLength = buttons_count % columns == 0 ? columns : buttons_count % columns;
+
         // 2D button array
         InlineKeyboardButton[][] inlineKeyboardButtons = new InlineKeyboardButton[rows][];
         // rows (except last) initialization
         for (int i = 0; i < rows - 1; i++) {
             InlineKeyboardButton[] row = new InlineKeyboardButton[columns];
             for (int j = 0; j < columns; j++) {
-                row[j] = new InlineKeyboardButton(strings.get(i * columns + j)).callbackData(strings.get(i * columns + j));
+                row[j] = new InlineKeyboardButton(strings.get(i * columns + j)).callbackData(callbacks.get(i * columns + j));
             }
             inlineKeyboardButtons[i] = row;
         }
         // last row initialisation
         InlineKeyboardButton[] lastRow = new InlineKeyboardButton[lastRowLength];
-        for (int i = 0; i < lastRowLength - 1; i++) { // excluding exit button place
-            lastRow[i] = new InlineKeyboardButton(strings.get(buttons_count - lastRowLength + i)).callbackData(strings.get(buttons_count - lastRowLength + i));
+        for (int i = 0; i < lastRowLength - ( exitButton ? 1 : 0 ); i++) { // ex- or including exit button place
+            lastRow[i] = new InlineKeyboardButton(strings.get(buttons_count - lastRowLength + i)).callbackData(callbacks.get(buttons_count - lastRowLength + i));
         }
-        lastRow[lastRowLength - 1] = new InlineKeyboardButton("Завершить").callbackData(FINISH_SELECTION); // adding exit button
-        inlineKeyboardButtons[rows - 1] = lastRow;
 
+        if (exitButton)
+            lastRow[lastRowLength - 1] = new InlineKeyboardButton("Завершить").callbackData(FINISH_SELECTION); // adding exit button
+
+        inlineKeyboardButtons[rows - 1] = lastRow;
         return inlineKeyboardButtons;
+
     }
 
     public static InlineKeyboardButton findButtonByText(InlineKeyboardButton[][] buttons, String buttonText) {
@@ -117,6 +148,4 @@ public class UpdateTool {
 
         return new InlineKeyboardButton(newText).callbackData(newText);
     }
-
-
 }
