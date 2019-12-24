@@ -13,6 +13,7 @@ import com.softkit.vo.UpdateTool;
 import org.springframework.stereotype.Component;
 
 @Component
+//todo rename
 public class CandidateStatus extends AbstractStep {
 
     public CandidateStatus(UserStatusRepository userStatusRepository) {
