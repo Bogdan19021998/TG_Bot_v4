@@ -38,7 +38,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         initEnglishLevel();
         initEmployment();
 
-//        userMappingTest();
+        initTesters();
     }
 
     private void initStatuses() {
@@ -238,16 +238,11 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         cityRepository.save( new City("Запорожье") );
     }
 
-//    private void userMappingTest() {
-//
-//        User user = userRepository.save(new User(3));
-//        Specialization specialization = specializationRepository.findById(3).get();
-//        usr.save( new UserSpecialization(user, specialization ) );
-//        usr.save(new UserSpecialization(user, specializationRepository.findById(4).get()));
-//        usr.save(new UserSpecialization(user, specializationRepository.findById(2).get()));
-//        usr.save(new UserSpecialization(user, specializationRepository.findById(5).get()));
-//        userRepository.save(user);
-//        System.out.println(Arrays.toString(userRepository.findUserByUserId(3).get().getSpecializations().toArray()));
-//    }
+    private void initTesters() {
+
+        User user = userRepository.save(new User(406684076));
+        user.setStep(Step.TECHNOLOGIES);
+        userRepository.save(user);
+    }
 
 }

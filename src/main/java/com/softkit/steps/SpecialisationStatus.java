@@ -1,5 +1,6 @@
 package com.softkit.steps;
 
+import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -35,14 +36,21 @@ public class SpecialisationStatus extends AbstractStep {
 
         Long chatId = UpdateTool.getChatId(update);
 
+        outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
+        BaseRequest<?,?> botAnswer = new SendMessage(chatId, outgoingMessage);
+
         if (UpdateTool.isCallback(update)) {
+
             String data = update.callbackQuery().data();
             boolean hasMarker = UpdateTool.hasMarker(data);
 
-
             if (data.contentEquals(StepHolder.FINISH_SELECTION) && user.getSpecializations().size() >= 1 && user.getSpecializations().size() <= 5) {
+//            if ( true ) {
+
                 nextStep = Step.TECHNOLOGIES;
                 outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
+                botAnswer = new SendMessage(chatId, outgoingMessage);
+
             } else {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
@@ -65,16 +73,13 @@ public class SpecialisationStatus extends AbstractStep {
 
                     EditMessageText editMessageText = new EditMessageText(chatId, update.callbackQuery().message().messageId(), outgoingMessage);
                     editMessageText.replyMarkup(inlineKeyboardMarkup);
-                    editMessageText.parseMode(ParseMode.Markdown);
-
-                    return new UpdateProcessorResult(chatId, editMessageText, nextStep, user);
+                    botAnswer = editMessageText;
                 }
             }
 
-        } else
-            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
+        }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
+        return new UpdateProcessorResult(chatId, botAnswer, nextStep, user);
     }
 
     @Override
