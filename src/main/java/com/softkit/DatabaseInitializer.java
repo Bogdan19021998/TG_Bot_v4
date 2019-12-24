@@ -1,14 +1,13 @@
-package com.softkit.vo;
+package com.softkit;
 
 import com.softkit.database.*;
 import com.softkit.repository.*;
+import com.softkit.vo.Step;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 
 @Component
 @AllArgsConstructor
@@ -21,13 +20,13 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     ExperienceRepository experienceRepository;
     EnglishLevelRepository englishLevelRepository;
     CityRepository cityRepository;
+    UserSpecialisationsRepository usr;
 
-////    UserSpecialisationsRepository usr;
-////
+
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        initData();
+//        initData();
     }
 
     private void initData() {
@@ -38,7 +37,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         initEnglishLevel();
         initEmployment();
 
-//        userMappingTest();
+        userMappingTest();
     }
 
     private void initStatuses() {
@@ -238,16 +237,15 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
         cityRepository.save( new City("Запорожье") );
     }
 
-//    private void userMappingTest() {
-//
-//        User user = userRepository.save(new User(3));
-//        Specialization specialization = specializationRepository.findById(3).get();
-//        usr.save( new UserSpecialization(user, specialization ) );
+    private void userMappingTest() {
+
+        User user = userRepository.save(new User(3));
+        usr.save(new UserSpecialization(user, specializationRepository.findById(3).get()));
 //        usr.save(new UserSpecialization(user, specializationRepository.findById(4).get()));
 //        usr.save(new UserSpecialization(user, specializationRepository.findById(2).get()));
 //        usr.save(new UserSpecialization(user, specializationRepository.findById(5).get()));
-//        userRepository.save(user);
-//        System.out.println(Arrays.toString(userRepository.findUserByUserId(3).get().getSpecializations().toArray()));
-//    }
+        userRepository.save(user);
+        System.out.println(userRepository.findUserByUserId(3).get().getSpecializations().size());
+    }
 
 }
