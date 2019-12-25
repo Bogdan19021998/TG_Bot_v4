@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserStatusRepository extends CrudRepository<Status,Integer>{
 
-    Optional<Status> findUserStatusByStep (Step step);
+    Optional<Status> findUserStatusByStep(Step step);
 
 }

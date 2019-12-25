@@ -11,8 +11,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Data
-@NoArgsConstructor
 @NotNull
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class Technology {
 

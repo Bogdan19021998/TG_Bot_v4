@@ -1,9 +1,6 @@
 package com.softkit.database;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -13,18 +10,22 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @NotNull
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserTechnology {
 
     @Id
     @Column( unique = true )
+    @Setter( value = AccessLevel.NONE )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
     private Integer id;
 
-    @ManyToOne
-    private Technology technology;
+    private Integer userId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private String technology;
+
+    public UserTechnology(Integer userId, String technology) {
+        this.userId = userId;
+        this.technology = technology;
+    }
 }

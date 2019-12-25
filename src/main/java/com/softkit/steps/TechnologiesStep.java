@@ -9,6 +9,7 @@ import com.softkit.database.Status;
 import com.softkit.database.User;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.repository.UserTechnologyRepository;
+import com.softkit.service.TechnologiesService;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
@@ -20,11 +21,11 @@ import java.util.ArrayList;
 @Component
 public class TechnologiesStep extends AbstractStep {
 
-    private UserTechnologyRepository userTechnologyRepository;
+    private TechnologiesService technologiesService;
 
-    public TechnologiesStep(UserStatusRepository userStatusRepository, UserTechnologyRepository userTechnologyRepository) {
+    public TechnologiesStep(UserStatusRepository userStatusRepository, TechnologiesService technologiesService) {
         super(userStatusRepository);
-        this.userTechnologyRepository = userTechnologyRepository;
+        this.technologiesService = technologiesService;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class TechnologiesStep extends AbstractStep {
             nextStep = Step.EXPERIENCE;
             userText = TextParser.fixSpacing(userText);
             String[] technologiesStr = userText.split(" ");
-            userTechnologyRepository.saveTechnologies(technologiesStr);
+            technologiesService.addAllTechnologies(user, technologiesStr);
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();

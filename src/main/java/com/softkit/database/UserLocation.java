@@ -2,9 +2,7 @@ package com.softkit.database;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -13,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @NotNull
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserLocation {
 
     @Id
@@ -24,5 +22,4 @@ public class UserLocation {
 
     private Float latitude;
     private Float longitude;
-    private Timestamp dateAdded;
 }

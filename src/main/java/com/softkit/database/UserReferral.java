@@ -1,10 +1,10 @@
 package com.softkit.database;
 
-import com.softkit.vo.Specialization;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -12,22 +12,21 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NotNull
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserSpecialization {
+public class UserReferral {
 
     @Id
     @Column( unique = true )
     @Setter( value = AccessLevel.NONE )
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
-    private Integer id;
-
-    @Enumerated(EnumType.ORDINAL)
-    private Specialization specialization;
+    private Long id;
 
     private Integer userId;
 
-    public UserSpecialization(Integer userId, Specialization specialization) {
+    private Integer referralId;
+
+    public UserReferral( Integer userId, Integer referralId ) {
         this.userId = userId;
-        this.specialization = specialization;
+        this.referralId = referralId;
     }
 }
