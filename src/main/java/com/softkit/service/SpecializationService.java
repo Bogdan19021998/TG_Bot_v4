@@ -7,36 +7,25 @@ import com.softkit.vo.Specialization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class SpecializationService {
 
     private final UserSpecialisationsRepository userSpecialisationsRepository;
 
-    public boolean addUserSpecialisation(User user, String nameSpecialization){
-        Specialization specialization = Specialization.valueOf(nameSpecialization);
-        if (specialization != null) {
-            userSpecialisationsRepository.save(new UserSpecialization(user.getId(), specialization));
-            return true;
-        }
-        return false;
+    public HashSet<UserSpecialization> findAllUserSpecialization(User user) {
+        return new HashSet<UserSpecialization>(
+                userSpecialisationsRepository.findUserSpecializationsByUserId(user.getId()));
     }
 
-    public boolean removeUserSpecialisation(User user, String nameSpecialization){
-        Specialization specialization = getSpecialization(nameSpecialization);
-        Integer count = 0;
-        if( specialization != null ) {
-            count = userSpecialisationsRepository.removeUserSpecialization(user.getId(), specialization);
-        }
-        return count != 0 ? true : false;
+    public void addUserSpecialisation(User user, Specialization specialization) {
+        userSpecialisationsRepository.save(new UserSpecialization(user.getId(), specialization));
     }
 
-    private Specialization getSpecialization( String nameSpecilization )
-    {
-        Specialization specialization = null;
-        try{
-            specialization = Specialization.valueOf( nameSpecilization );
-        }catch (IllegalArgumentException iae){}
-        return specialization;
+    public void removeUserSpecialisation(User user, Specialization specialization) {
+        userSpecialisationsRepository.removeUserSpecialization(user.getId(), specialization);
     }
 }
