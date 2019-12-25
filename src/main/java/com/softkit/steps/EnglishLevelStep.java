@@ -9,7 +9,6 @@ import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -51,14 +50,14 @@ public class EnglishLevelStep extends AbstractStep {
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
-        List<String> experiences = new ArrayList<>();
-        Stream.of(EnglishLevel.values()).forEach(experience -> experiences.add(experience.getDescription()));
+        List<String> englishLevels = new ArrayList<>();
+        Stream.of(EnglishLevel.values()).forEach(englishLevel -> englishLevels.add(englishLevel.getDescription()));
 
         List<String> callbacks = new ArrayList<>();
         Stream.of(EnglishLevel.values()).forEach(experience -> callbacks.add(experience.name()));
 
         return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, false))
+                new InlineKeyboardMarkup(UpdateTool.getButtonArray(englishLevels, callbacks, 1, false))
         );
     }
 

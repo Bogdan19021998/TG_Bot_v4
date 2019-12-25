@@ -40,13 +40,12 @@ public class EmploymentStep extends AbstractStep {
 
         if (UpdateTool.isCallback(update)) {
 
-            if (data.contentEquals(StepHolder.FINISH_SELECTION) && employmentsService.findAllUserEmployments(user).size() >= 0/*1*/ /* debug ..*/ ) {
+            if (data.contentEquals(StepHolder.FINISH_SELECTION) && employmentsService.findAllUserEmployments(user).size() >= 1) {
                 nextStep = Step.MIN_SALARY;
                 outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
                 botAnswer = new SendMessage(chatId, outgoingMessage);
                 optional = new AnswerCallbackQuery( update.callbackQuery().id() );
-            } else if (Specialization.hasEnumWithName(data)) {
-
+            } else if (Employment.hasEnumWithName(data)) {
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
                 InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
 
@@ -83,14 +82,14 @@ public class EmploymentStep extends AbstractStep {
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
-        List<String> experiences = new ArrayList<>();
-        Stream.of(Employment.values()).forEach(experience -> experiences.add(experience.getDescription()));
+        List<String> employments = new ArrayList<>();
+        Stream.of(Employment.values()).forEach(employment -> employments.add(employment.getDescription()));
 
         List<String> callbacks = new ArrayList<>();
         Stream.of(Employment.values()).forEach(experience -> callbacks.add(experience.name()));
 
         return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, true))
+                new InlineKeyboardMarkup(UpdateTool.getButtonArray(employments, callbacks, 1, true))
         );
     }
 

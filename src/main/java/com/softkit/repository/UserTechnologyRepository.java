@@ -1,8 +1,6 @@
 package com.softkit.repository;
 
-import com.softkit.database.UserSpecialization;
 import com.softkit.database.UserTechnology;
-import com.softkit.vo.Specialization;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

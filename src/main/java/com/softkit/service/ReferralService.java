@@ -1,12 +1,8 @@
 package com.softkit.service;
 
 import com.softkit.database.User;
-import com.softkit.database.UserEmployment;
 import com.softkit.database.UserReferral;
 import com.softkit.repository.ReferralRepository;
-import com.softkit.repository.UserEmploymentRepository;
-import com.softkit.repository.UserRepository;
-import com.softkit.vo.Employment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +10,12 @@ import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
-public class RefferalService {
+public class ReferralService {
 
     private final ReferralRepository referralRepository;
 
     public HashSet<UserReferral> findAllUserReferrals(User user) {
-        return new HashSet<UserReferral>(referralRepository.findUserReferralsByUserId(user.getId()));
+        return new HashSet<>(referralRepository.findUserReferralsByUserId(user.getId()));
     }
 
     public void addUserReferral(User user, Integer referralId) {
@@ -27,6 +23,6 @@ public class RefferalService {
     }
 
     public void removeAllUserReferrals(User user) {
-        referralRepository.removeAllUserRefferals( user.getId() );
+        referralRepository.removeAllUserReferrals( user.getId() );
     }
 }

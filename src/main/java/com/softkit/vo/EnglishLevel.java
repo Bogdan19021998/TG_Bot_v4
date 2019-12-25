@@ -19,7 +19,7 @@ public enum EnglishLevel {
         try {
             EnglishLevel.valueOf( data );
             return true;
-        }catch ( IllegalArgumentException iae ){}
+        } catch ( IllegalArgumentException ignored) {}
         return false;
     }
 }

@@ -11,7 +11,6 @@ import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.vo.UpdateTool;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component

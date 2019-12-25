@@ -1,8 +1,6 @@
 package com.softkit.repository;
 
 import com.softkit.database.UserReferral;
-import com.softkit.database.UserSpecialization;
-import com.softkit.vo.Specialization;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -18,5 +16,5 @@ public interface ReferralRepository extends CrudRepository<UserReferral, Long> {
     @Query(value = "delete from UserReferral us where us.userId = :userId")
     @Modifying
     @Transactional
-    void removeAllUserRefferals(Integer userId);
+    void removeAllUserReferrals(Integer userId);
 }

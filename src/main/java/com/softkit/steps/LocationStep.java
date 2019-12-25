@@ -51,14 +51,14 @@ public class LocationStep extends AbstractStep {
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
-        List<String> experiences = new ArrayList<>();
-        Stream.of(City.values()).forEach(experience -> experiences.add(experience.getDescription()));
+        List<String> cities = new ArrayList<>();
+        Stream.of(City.values()).forEach(city -> cities.add(city.getDescription()));
 
         List<String> callbacks = new ArrayList<>();
         Stream.of(City.values()).forEach(experience -> callbacks.add(experience.name()));
 
         return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, false))
+                new InlineKeyboardMarkup(UpdateTool.getButtonArray(cities, callbacks, 1, false))
         );
     }
 

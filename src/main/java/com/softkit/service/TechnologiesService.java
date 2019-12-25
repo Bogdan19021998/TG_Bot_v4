@@ -4,11 +4,10 @@ import com.softkit.database.User;
 import com.softkit.database.UserTechnology;
 import com.softkit.repository.UserTechnologyRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -20,18 +19,9 @@ public class TechnologiesService {
         return new HashSet<>(userTechnologyRepository.findUserTechnologiesByUserId(user.getId()));
     }
 
-    public void addAllTechnologies(User user, String[] technologies) {
-        if (technologies != null) {
-
-            Set<UserTechnology> userTechnologiesSet = new LinkedHashSet<>(technologies.length);
-
-            int size = technologies.length;
-
-            for (int i = 0; i < technologies.length; i++) {
-
-               userTechnologyRepository.save(new UserTechnology(user.getId(), technologies[i]) );
-            }
-
+    public void addAllTechnologies(User user, @NonNull String[] technologies) {
+        for (String technology : technologies) {
+            userTechnologyRepository.save(new UserTechnology(user.getId(), technology));
         }
     }
 

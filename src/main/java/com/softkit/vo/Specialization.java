@@ -26,7 +26,7 @@ public enum Specialization {
         try {
             Specialization.valueOf( data );
             return true;
-        }catch ( IllegalArgumentException iae ){}
+        } catch ( IllegalArgumentException ignored) {}
         return false;
     }
 }

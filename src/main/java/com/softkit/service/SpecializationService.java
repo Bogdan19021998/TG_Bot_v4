@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class SpecializationService {
     private final UserSpecialisationsRepository userSpecialisationsRepository;
 
     public HashSet<UserSpecialization> findAllUserSpecialization(User user) {
-        return new HashSet<UserSpecialization>(
+        return new HashSet<>(
                 userSpecialisationsRepository.findUserSpecializationsByUserId(user.getId()));
     }
 

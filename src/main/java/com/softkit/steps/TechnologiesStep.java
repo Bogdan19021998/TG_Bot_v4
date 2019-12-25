@@ -8,7 +8,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
 import com.softkit.database.User;
 import com.softkit.repository.UserStatusRepository;
-import com.softkit.repository.UserTechnologyRepository;
 import com.softkit.service.TechnologiesService;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;

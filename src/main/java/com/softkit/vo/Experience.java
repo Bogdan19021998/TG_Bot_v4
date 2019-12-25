@@ -20,7 +20,7 @@ public enum Experience {
         try {
             Experience.valueOf( data );
             return true;
-        }catch ( IllegalArgumentException iae ){}
+        } catch ( IllegalArgumentException ignored) {}
         return false;
     }
 }

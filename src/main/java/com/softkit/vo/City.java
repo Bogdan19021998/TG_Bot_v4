@@ -20,7 +20,7 @@ public enum City {
         try {
             City.valueOf( data );
             return true;
-        }catch ( IllegalArgumentException iae ){}
+        } catch ( IllegalArgumentException ignored) {}
         return false;
     }
 }
