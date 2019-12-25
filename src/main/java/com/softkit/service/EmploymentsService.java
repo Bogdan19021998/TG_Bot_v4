@@ -1,10 +1,9 @@
 package com.softkit.service;
 
 import com.softkit.database.User;
-import com.softkit.database.UserSpecialization;
-import com.softkit.repository.UserSpecialisationsRepository;
-import com.softkit.vo.Emplyment;
-import com.softkit.vo.Specialization;
+import com.softkit.database.UserEmployment;
+import com.softkit.repository.UserEmploymentRepository;
+import com.softkit.vo.Employment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +13,17 @@ import java.util.HashSet;
 @RequiredArgsConstructor
 public class EmploymentsService {
 
+    private final UserEmploymentRepository userEmploymentRepository;
 
-    public HashSet<UserSpecialization> findAllUserEmployments(User user) {
-//        return new HashSet<UserSpecialization>(
-//                userSpecialisationsRepository.findUserSpecializationsByUserId(user.getId()));
-        return new HashSet<>();
+    public HashSet<UserEmployment> findAllUserEmployments(User user) {
+        return new HashSet<UserEmployment>(userEmploymentRepository.findUserEmploymentsByUserId(user.getId()));
     }
 
-    public void addUserEmployment(User user, Emplyment emplyment) {
+    public void addUserEmployment(User user, Employment emplyment) {
+        userEmploymentRepository.save( new UserEmployment(user.getId(), emplyment));
     }
 
-    public void removeUserEmployment(User user, Emplyment emplyment) {
+    public void removeUserEmployment(User user, Employment emplyment) {
+        userEmploymentRepository.removeUserEmployment( user.getId(), emplyment );
     }
 }
