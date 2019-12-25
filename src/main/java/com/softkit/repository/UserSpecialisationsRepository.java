@@ -21,4 +21,9 @@ public interface UserSpecialisationsRepository extends CrudRepository<UserSpecia
     @Modifying
     @Transactional
     void removeUserSpecialization(Integer userId, Specialization specialization);
+
+    @Query(value = "delete from UserSpecialization us where us.userId = :userId")
+    @Modifying
+    @Transactional
+    void removeAllUserSpecializations(Integer userId);
 }

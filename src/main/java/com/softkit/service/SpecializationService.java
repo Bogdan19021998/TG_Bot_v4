@@ -27,4 +27,8 @@ public class SpecializationService {
     public void removeUserSpecialisation(User user, Specialization specialization) {
         userSpecialisationsRepository.removeUserSpecialization(user.getId(), specialization);
     }
+
+    public void removeAllUserSpecialisations(User user) {
+        userSpecialisationsRepository.removeAllUserSpecializations( user.getId() );
+    }
 }

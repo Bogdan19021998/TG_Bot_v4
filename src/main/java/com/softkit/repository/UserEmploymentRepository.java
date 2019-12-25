@@ -22,6 +22,8 @@ public interface UserEmploymentRepository extends CrudRepository<UserEmployment,
     @Transactional
     void removeUserEmployment( Integer userId, Employment employment);
 
+    @Query(value = "delete from UserEmployment us where us.userId = :userId")
+    @Modifying
     @Transactional
-    Set<UserEmployment> save( Set<UserEmployment> userEmploymentSet );
+    void removeAllUserEmployments(Integer userId);
 }
