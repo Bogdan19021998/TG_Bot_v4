@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserEmployment {
 
     @Id
@@ -17,10 +17,13 @@ public class UserEmployment {
     @EqualsAndHashCode.Include
     private Long id;
 
+    private Integer userId;
+
     @Enumerated(EnumType.ORDINAL)
     private Employment employment;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    public UserEmployment(Integer userId, Employment employment) {
+        this.userId = userId;
+        this.employment = employment;
+    }
 }
