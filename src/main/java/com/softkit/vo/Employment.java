@@ -13,6 +13,10 @@ public enum Employment {
     private final String description;
 
     public static boolean hasEnumWithName(String data) {
-        return true;
+        try {
+            Employment.valueOf( data );
+            return true;
+        }catch ( IllegalArgumentException iae ){}
+        return false;
     }
 }

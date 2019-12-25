@@ -17,6 +17,10 @@ public enum City {
     private final String description;
 
     public static boolean hasEnumWithName(String data) {
-        return true;
+        try {
+            City.valueOf( data );
+            return true;
+        }catch ( IllegalArgumentException iae ){}
+        return false;
     }
 }

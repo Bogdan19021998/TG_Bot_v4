@@ -23,6 +23,10 @@ public enum Specialization {
     private final String description;
 
     public static boolean hasEnumWithName(String data) {
-        return true;
+        try {
+            Specialization.valueOf( data );
+            return true;
+        }catch ( IllegalArgumentException iae ){}
+        return false;
     }
 }
