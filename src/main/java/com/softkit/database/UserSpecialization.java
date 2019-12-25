@@ -4,41 +4,27 @@ import com.softkit.vo.Specialization;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserSpecialization {
 
     @Id
     @Column( unique = true )
     @Setter( value = AccessLevel.NONE )
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @EqualsAndHashCode.Include
     private Integer id;
 
     @Enumerated(EnumType.ORDINAL)
     private Specialization specialization;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private Integer userId;
 
-    public UserSpecialization(User user, Specialization specialization) {
-        this.user = user;
+    public UserSpecialization(Integer userId, Specialization specialization) {
+        this.userId = userId;
         this.specialization = specialization;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserSpecialization that = (UserSpecialization) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }
