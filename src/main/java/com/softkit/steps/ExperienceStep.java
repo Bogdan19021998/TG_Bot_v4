@@ -1,15 +1,16 @@
 package com.softkit.steps;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -29,16 +30,18 @@ public class ExperienceStep extends AbstractStep {
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
+        BaseRequest<?,?> optional = null;
 
         if (UpdateTool.isCallback(update) && Experience.hasEnumWithName(update.callbackQuery().data())) {
             userFieldsSetter.setExperience(user, Experience.valueOf(update.callbackQuery().data()));
             nextStep = Step.ENGLISH_LEVEL;
+            optional = UpdateTool.getSelectedItemBaseRequest(chatId, update.callbackQuery());
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);
     }
 
     @Override

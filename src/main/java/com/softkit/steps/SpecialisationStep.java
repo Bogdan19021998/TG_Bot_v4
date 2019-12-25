@@ -35,20 +35,20 @@ public class SpecialisationStep extends AbstractStep {
 
         outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         BaseRequest<?,?> botAnswer = new SendMessage(chatId, outgoingMessage);
+        BaseRequest<?,?> optional = null;
 
         String data = update.callbackQuery().data();
 
         if (UpdateTool.isCallback(update)) {
 
-
             if (data.contentEquals(StepHolder.FINISH_SELECTION) &&
                     ( specializationService.findAllUserSpecialization(user).size() >= 1 &&
-                            specializationService.findAllUserSpecialization(user).size() <= 5 )
-            ) {
+                            specializationService.findAllUserSpecialization(user).size() <= 5 )) {
+
                 nextStep = Step.TECHNOLOGIES;
                 outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
                 botAnswer = new SendMessage(chatId, outgoingMessage);
-
+                optional = new AnswerCallbackQuery( update.callbackQuery().id() );
             } else if (Specialization.hasEnumWithName(data)) {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
@@ -78,7 +78,7 @@ public class SpecialisationStep extends AbstractStep {
 
         }
 
-        return new UpdateProcessorResult(chatId, botAnswer, nextStep, user);
+        return new UpdateProcessorResult(chatId, botAnswer, nextStep, user, optional);
     }
 
     @Override

@@ -1,8 +1,12 @@
 package com.softkit.vo;
 
+import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.BaseRequest;
+import com.pengrad.telegrambot.request.EditMessageText;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -11,6 +15,8 @@ import static com.softkit.steps.StepHolder.FINISH_SELECTION;
 
 public class UpdateTool {
 
+
+    // getters
     public static Message getUpdateMessage(Update u) {
         Message message = null;
         if (u.callbackQuery() != null) {
@@ -42,12 +48,14 @@ public class UpdateTool {
         return null;
     }
 
+
+    // button array
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings) {
-        return getButtonArray(strings, strings,1, false);
+        return getButtonArray(strings, strings, 1, false);
     }
 
     public static InlineKeyboardButton[][] getButtonArrayWithExitButton(List<String> strings) {
-        return getButtonArray(strings, strings,1, true);
+        return getButtonArray(strings, strings, 1, true);
     }
 
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns, boolean exitButton) {
@@ -88,7 +96,7 @@ public class UpdateTool {
         }
         // last row initialisation
         InlineKeyboardButton[] lastRow = new InlineKeyboardButton[lastRowLength];
-        for (int i = 0; i < lastRowLength - ( exitButton ? 1 : 0 ); i++) { // ex- or including exit button place
+        for (int i = 0; i < lastRowLength - (exitButton ? 1 : 0); i++) { // ex- or including exit button place
             lastRow[i] = new InlineKeyboardButton(strings.get(buttons_count - lastRowLength + i)).callbackData(callbacks.get(buttons_count - lastRowLength + i));
         }
 
@@ -123,6 +131,8 @@ public class UpdateTool {
         }
     }
 
+
+    // marker
     public static String createMarker() {
         return new String(
                 new byte[]{(byte) (' '), (byte) 0xE2, (byte) 0x9C, (byte) 0x85},
@@ -147,5 +157,22 @@ public class UpdateTool {
         String newText = (endIndex != -1) ? inlineKeyboardButton.text().substring(0, endIndex) : inlineKeyboardButton.text();
 
         return new InlineKeyboardButton(newText).callbackData(inlineKeyboardButton.callbackData());
+    }
+
+
+    // optional BaseRequest
+    public static BaseRequest<?, ?> getSelectedItemBaseRequest(Long chatId, CallbackQuery callbackQuery) {
+        String experience = callbackQuery.data();
+        InlineKeyboardMarkup inlineKeyboardMarkup = callbackQuery.message().replyMarkup();
+        InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), experience);
+        if (inlineKeyboardButton != null) {
+            inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
+            UpdateTool.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), experience, inlineKeyboardButton);
+            EditMessageText editMessageText = new EditMessageText(chatId, callbackQuery.message().messageId(),
+                    callbackQuery.message().text());
+            editMessageText.replyMarkup(inlineKeyboardMarkup);
+            return editMessageText;
+        }
+        return null;
     }
 }

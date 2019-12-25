@@ -25,4 +25,12 @@ public class UpdateProcessorResult {
 
     private User updatedUser;
 
+    private BaseRequest<?, ?> optionalRequest;
+
+    public UpdateProcessorResult(@Nullable Long chatId, @NotNull BaseRequest<?, ?> request, Step nextStep, User updatedUser) {
+        this.chatId = chatId;
+        this.request = request;
+        this.nextStep = nextStep;
+        this.updatedUser = updatedUser;
+    }
 }

@@ -29,16 +29,18 @@ public class EnglishLevelStep extends AbstractStep {
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
+        BaseRequest<?,?> optional = null;
 
         if (UpdateTool.isCallback(update) && EnglishLevel.hasEnumWithName(update.callbackQuery().data())) {
             userFieldsSetter.setEnglishLevel(user, EnglishLevel.valueOf(update.callbackQuery().data()));
             nextStep = Step.CITY_OR_LOCATION;
+            optional = UpdateTool.getSelectedItemBaseRequest(chatId, update.callbackQuery());
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);
     }
 
     @Override

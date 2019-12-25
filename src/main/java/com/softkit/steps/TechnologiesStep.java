@@ -2,6 +2,7 @@ package com.softkit.steps;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
@@ -42,7 +43,12 @@ public class TechnologiesStep extends AbstractStep {
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
+        BaseRequest<?,?> optional = null;
+        if (UpdateTool.isCallback(update)) {
+            optional = new AnswerCallbackQuery( update.callbackQuery().id() );
+        }
+
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);
     }
 
     @Override

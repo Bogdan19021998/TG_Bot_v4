@@ -3,6 +3,7 @@ package com.softkit.steps;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -33,6 +34,7 @@ public class EmploymentStep extends AbstractStep {
 
         outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         BaseRequest<?,?> botAnswer = new SendMessage(chatId, outgoingMessage);
+        BaseRequest<?,?> optional = null;
 
         String data = update.callbackQuery().data();
 
@@ -42,6 +44,7 @@ public class EmploymentStep extends AbstractStep {
                 nextStep = Step.MIN_SALARY;
                 outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
                 botAnswer = new SendMessage(chatId, outgoingMessage);
+                optional = new AnswerCallbackQuery( update.callbackQuery().id() );
             } else if (Specialization.hasEnumWithName(data)) {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
@@ -69,7 +72,7 @@ public class EmploymentStep extends AbstractStep {
 
         }
 
-        return new UpdateProcessorResult(chatId, botAnswer, nextStep, user);
+        return new UpdateProcessorResult(chatId, botAnswer, nextStep, user, optional);
     }
 
     @Override

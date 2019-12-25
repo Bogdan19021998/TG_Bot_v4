@@ -1,6 +1,7 @@
 package com.softkit;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.softkit.database.User;
 import com.softkit.repository.UserRepository;
@@ -49,8 +50,14 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
                         userRepository.save(result.getUpdatedUser());
                     }
                 } else {
+
+                    if (result.getOptionalRequest() != null) {
+                        messageSender.send(result.getOptionalRequest());
+                    }
+
                     BaseRequest<?, ?> request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
                     isSent = messageSender.send(request);
+
                     if (isSent) {
                         userRepository.setNewStep(userId, result.getNextStep());
                         System.out.println("user " + UpdateTool.getUserId(update) + " set status " + result.getNextStep());
