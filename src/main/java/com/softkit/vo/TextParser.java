@@ -11,7 +11,6 @@ public class TextParser {
         return text.replaceAll(" {2,}", " ");
     }
 
-
     public static boolean isLetterText(String text) {
         for (int i = 0; i < text.length(); i++) {
             if ( !Character.isLetter(text.charAt(i)) && text.charAt(i) != ' ' ) {
@@ -37,10 +36,6 @@ public class TextParser {
             }
         }
         return text.length() < 11 && Long.parseLong(text) <= Integer.MAX_VALUE;
-    }
-
-    public static boolean isEnglishText(String text) {
-        return false;
     }
 
 }

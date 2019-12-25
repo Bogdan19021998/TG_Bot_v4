@@ -11,4 +11,8 @@ public enum Employment {
 
     @Getter
     private final String description;
+
+    public static boolean hasEnumWithName(String data) {
+        return true;
+    }
 }

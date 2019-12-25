@@ -174,9 +174,9 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
     }
 
     private void initTesters() {
-//        User user = userRepository.save(new User(406684076));
-//        user.setStep(Step.START);
-//        userRepository.save(user);
+        User user = userRepository.save(new User(406684076));
+        user.setStep(Step.START);
+        userRepository.save(user);
     }
 
 }

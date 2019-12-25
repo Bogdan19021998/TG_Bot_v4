@@ -29,29 +29,29 @@ public class Test {
 
 
     }
-
-    public void checkSpecializations()
-    {
-        User user = userRepository.save(new User(123123123));
-
-        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
-
-        SpecializationService spcService = ctx.getBean(SpecializationService.class);
-
-        int sizeEmpty = spcService.findAllUserSpecialization(user).size();
-
-        spcService.addUserSpecialisation(user, Specialization.JAVA.name() );
-        spcService.addUserSpecialisation(user, Specialization.ANDROID.name() );
-        spcService.addUserSpecialisation(user, Specialization.IOS.name() );
-
-        System.out.println();
-
-        spcService.removeUserSpecialisation(user, Specialization.JAVA.name() );
-        spcService.removeUserSpecialisation(user, Specialization.JAVA.name() );
-        spcService.removeUserSpecialisation(user, "not found sdfsfs" );
-
-        int sizeFill = spcService.findAllUserSpecialization(user).size();
-
-        System.out.println();
-    }
+//
+//    public void checkSpecializations()
+//    {
+//        User user = userRepository.save(new User(123123123));
+//
+//        ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
+//
+//        SpecializationService spcService = ctx.getBean(SpecializationService.class);
+//
+//        int sizeEmpty = spcService.findAllUserSpecialization(user).size();
+//
+//        spcService.addUserSpecialisation(user, Specialization.JAVA.name() );
+//        spcService.addUserSpecialisation(user, Specialization.ANDROID.name() );
+//        spcService.addUserSpecialisation(user, Specialization.IOS.name() );
+//
+//        System.out.println();
+//
+//        spcService.removeUserSpecialisation(user, Specialization.JAVA.name() );
+//        spcService.removeUserSpecialisation(user, Specialization.JAVA.name() );
+//        spcService.removeUserSpecialisation(user, "not found sdfsfs" );
+//
+//        int sizeFill = spcService.findAllUserSpecialization(user).size();
+//
+//        System.out.println();
+//    }
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserTechnologyRepository extends CrudRepository<UserTechnology, Integer> {
 
-    default void saveTechnologies(String technologies) {};
+    default void saveTechnologies(String[] technologies) {};
 
 }

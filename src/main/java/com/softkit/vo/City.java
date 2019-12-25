@@ -10,9 +10,13 @@ public enum City {
     LVIV("Львов"),
     KHARKIV("Харьков"),
     ODESA("Одесса"),
-    DNIPR("Днепр"),
-    ZAPOROZHE("Запорожье");
+    DNIPRO("Днепр"),
+    ZAPORIZHZHYA("Запорожье");
 
     @Getter
     private final String description;
+
+    public static boolean hasEnumWithName(String data) {
+        return true;
+    }
 }

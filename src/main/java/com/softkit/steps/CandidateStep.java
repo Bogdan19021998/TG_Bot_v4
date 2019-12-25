@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.database.Status;
+import com.softkit.repository.UserFieldsSetter;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
@@ -14,10 +15,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 //todo rename
-public class CandidateStatus extends AbstractStep {
+public class CandidateStep extends AbstractStep {
 
-    public CandidateStatus(UserStatusRepository userStatusRepository) {
+    private final UserFieldsSetter userFieldsSetter;
+
+    public CandidateStep(UserStatusRepository userStatusRepository, UserFieldsSetter userFieldsSetter) {
         super(userStatusRepository);
+        this.userFieldsSetter = userFieldsSetter;
     }
 
     public UpdateProcessorResult process(Update update, User user) {
@@ -29,7 +33,7 @@ public class CandidateStatus extends AbstractStep {
 
         String botText;
         if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(outgoingMessage)) {
-            user.setCandidate(TextParser.fixSpacing(outgoingMessage));
+            userFieldsSetter.setCandidate(user, TextParser.fixSpacing(outgoingMessage));
             nextStep = Step.SPECIALISATIONS;
             botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {

@@ -100,10 +100,10 @@ public class UpdateTool {
 
     }
 
-    public static InlineKeyboardButton findButtonByText(InlineKeyboardButton[][] buttons, String buttonText) {
+    public static InlineKeyboardButton findButtonByCallback(InlineKeyboardButton[][] buttons, String buttonText) {
         for (InlineKeyboardButton[] button : buttons) {
             for (InlineKeyboardButton inlineKeyboardButton : button) {
-                if (inlineKeyboardButton.text().contentEquals(buttonText)) {
+                if (inlineKeyboardButton.callbackData().contentEquals(buttonText)) {
                     return inlineKeyboardButton;
                 }
             }
@@ -111,11 +111,11 @@ public class UpdateTool {
         return null;
     }
 
-    public static void changeButtonByText(InlineKeyboardButton[][] inlineKeyboard, String buttonText, InlineKeyboardButton newButton) {
+    public static void changeButtonByCallback(InlineKeyboardButton[][] inlineKeyboard, String callback, InlineKeyboardButton newButton) {
         for (InlineKeyboardButton[] inlineKeyboardButtons : inlineKeyboard) {
             for (int j = 0; j < inlineKeyboardButtons.length; j++) {
                 InlineKeyboardButton inlineKeyboardButton = inlineKeyboardButtons[j];
-                if (inlineKeyboardButton.text().contentEquals(buttonText)) {
+                if (inlineKeyboardButton.callbackData().contentEquals(callback)) {
                     inlineKeyboardButtons[j] = newButton;
                     return;
                 }
@@ -138,7 +138,7 @@ public class UpdateTool {
         String text = inlineKeyboardButton.text();
         String newText = text.contains(createMarker()) ? text : text + createMarker();
 
-        return new InlineKeyboardButton(newText).callbackData(inlineKeyboardButton.callbackData() + createMarker());
+        return new InlineKeyboardButton(newText).callbackData(inlineKeyboardButton.callbackData());
     }
 
     public static InlineKeyboardButton removeMarkerFromButton(InlineKeyboardButton inlineKeyboardButton) {
@@ -146,6 +146,6 @@ public class UpdateTool {
         int endIndex = inlineKeyboardButton.text().indexOf(createMarker());
         String newText = (endIndex != -1) ? inlineKeyboardButton.text().substring(0, endIndex) : inlineKeyboardButton.text();
 
-        return new InlineKeyboardButton(newText).callbackData(newText);
+        return new InlineKeyboardButton(newText).callbackData(inlineKeyboardButton.callbackData());
     }
 }

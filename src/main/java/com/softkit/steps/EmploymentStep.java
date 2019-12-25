@@ -8,11 +8,9 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
 import com.softkit.database.User;
-import com.softkit.database.UserEmployment;
-import com.softkit.repository.UserEmploymentRepository;
 import com.softkit.repository.UserStatusRepository;
+import com.softkit.service.EmploymentsService;
 import com.softkit.vo.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,13 +18,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
-public class EmploymentStatus extends AbstractStep {
+public class EmploymentStep extends AbstractStep {
 
-    private final UserEmploymentRepository userEmploymentRepository;
+    private final EmploymentsService employmentsService;
 
-    public EmploymentStatus(UserStatusRepository userStatusRepository, UserEmploymentRepository userEmploymentRepository) {
+    public EmploymentStep(UserStatusRepository userStatusRepository, EmploymentsService employmentsService) {
         super(userStatusRepository);
-        this.userEmploymentRepository = userEmploymentRepository;
+        this.employmentsService = employmentsService;
     }
 
     @Override
@@ -36,32 +34,31 @@ public class EmploymentStatus extends AbstractStep {
         outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
         BaseRequest<?,?> botAnswer = new SendMessage(chatId, outgoingMessage);
 
+        String data = update.callbackQuery().data();
+
         if (UpdateTool.isCallback(update)) {
 
-            String data = update.callbackQuery().data();
-            boolean hasMarker = UpdateTool.hasMarker(data);
-
-            if (data.contentEquals(StepHolder.FINISH_SELECTION) &&
-                    ( user.getEmployments().size() >= 1 || true ) // debug .. remove " || true "
-            ) {
+            if (data.contentEquals(StepHolder.FINISH_SELECTION) && employmentsService.findAllUserEmployments(user).size() >= 0/*1*/ /* debug ..*/ ) {
                 nextStep = Step.MIN_SALARY;
                 outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
                 botAnswer = new SendMessage(chatId, outgoingMessage);
-            } else {
+            } else if (Specialization.hasEnumWithName(data)) {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
-                InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByText(inlineKeyboardMarkup.inlineKeyboard(), data);
+                InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
 
                 if (inlineKeyboardButton != null) {
+                    boolean hasMarker = UpdateTool.hasMarker(inlineKeyboardButton.text());
+
                     if (hasMarker) {
-                        userEmploymentRepository.removeUserEmployment(user.getUserId(), data);
+                        employmentsService.removeUserEmployment(user, Employment.valueOf(data));
                         inlineKeyboardButton = UpdateTool.removeMarkerFromButton(inlineKeyboardButton);
                     } else {
-                        userEmploymentRepository.addUserEmployment(user.getUserId(), data);
+                        employmentsService.addUserEmployment(user, Employment.valueOf(data));
                         inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
                     }
 
-                    UpdateTool.changeButtonByText(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
+                    UpdateTool.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
 
                     outgoingMessage = UpdateTool.getUpdateMessage(update).text();
                     EditMessageText editMessageText = new EditMessageText(chatId, update.callbackQuery().message().messageId(), outgoingMessage);

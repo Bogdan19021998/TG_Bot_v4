@@ -33,9 +33,9 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
 
         if (userId != null)
             if (UpdateTool.getUpdateMessage(update).text() != null || UpdateTool.isCallback(update)) {
-                Optional<User> user = userRepository.findUserByUserId(userId);
+                Optional<User> user = userRepository.findUserById(userId);
 
-                AbstractStep step = user.map(u -> stepHolder.getStep(u.getStep())).orElseGet(stepHolder::getDefaultStatus);
+                AbstractStep step = user.map(u -> stepHolder.getStep(u.getStep())).orElseGet(stepHolder::getStartStep);
 
                 System.out.println("update from user " + UpdateTool.getUserId(update) + " with status " + step.getStepId());
 

@@ -6,8 +6,10 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.Status;
 import com.softkit.database.User;
+import com.softkit.repository.UserFieldsSetter;
 import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,19 +17,22 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
-public class EnglishLevelStatus extends AbstractStep {
+public class ExperienceStep extends AbstractStep {
 
-    public EnglishLevelStatus(UserStatusRepository userStatusRepository) {
+    private final UserFieldsSetter userFieldsSetter;
+
+    public ExperienceStep(UserStatusRepository userStatusRepository, UserFieldsSetter userFieldsSetter) {
         super(userStatusRepository);
+        this.userFieldsSetter = userFieldsSetter;
     }
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
 
-        if (UpdateTool.isCallback(update)) {
-            nextStep = Step.CITY_OR_LOCATION;
-            user.setEnglishLevel(EnglishLevel.valueOf(update.callbackQuery().data()));
+        if (UpdateTool.isCallback(update) && Experience.hasEnumWithName(update.callbackQuery().data())) {
+            userFieldsSetter.setExperience(user, Experience.valueOf(update.callbackQuery().data()));
+            nextStep = Step.ENGLISH_LEVEL;
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
         } else {
             outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
@@ -38,19 +43,19 @@ public class EnglishLevelStatus extends AbstractStep {
 
     @Override
     public Step getStepId() {
-        return Step.ENGLISH_LEVEL;
+        return Step.TECHNOLOGIES;
     }
 
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
         List<String> experiences = new ArrayList<>();
-        Stream.of(EnglishLevel.values()).forEach(experience -> experiences.add(experience.getDescription()));
+        Stream.of(Experience.values()).forEach(experience -> experiences.add(experience.getDescription()));
 
         List<String> callbacks = new ArrayList<>();
-        Stream.of(EnglishLevel.values()).forEach(experience -> callbacks.add(experience.name()));
+        Stream.of(Experience.values()).forEach(experience -> callbacks.add(experience.name()));
 
-        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
+        return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(
                 new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, false))
         );
     }

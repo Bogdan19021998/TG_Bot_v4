@@ -10,11 +10,11 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-    Optional<User> findUserByUserId(Integer userId);
+    Optional<User> findUserById(Integer userId);
 
 //    todo remove it from here
     default void setNewStep(Integer userId, Step step) {
-        Optional<User> optionalUser = findUserByUserId(userId);
+        Optional<User> optionalUser = findUserById(userId);
         User user = optionalUser.orElse(new User(userId));
         user.setStep(step);
         save(user);
