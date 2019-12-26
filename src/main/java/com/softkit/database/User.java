@@ -49,7 +49,7 @@ public class User {
     @Range (min = 10, max = 99999 )
     private Integer salaryUpTo;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Step step;
 
     @Enumerated(EnumType.ORDINAL)
