@@ -59,6 +59,9 @@ public class UserService implements UserFieldsSetter {
     }
 
     @Override
+    public void setAge(User user, Integer age) { user.setAge( age ); }
+
+    @Override
     public void setSalaryUpTo(User user, Integer price) {
         user.setSalaryUpTo( price );
     }

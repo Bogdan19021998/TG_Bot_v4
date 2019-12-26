@@ -17,8 +17,12 @@ public interface UserFieldsSetter {
 
     void setExperience(User user, Experience experience);
 
+    void setAge( User user, Integer age );
+
     void setSalaryUpTo(User user, Integer price);
     
     void setSalaryFrom(User user, Integer price);
+
+
 
 }
