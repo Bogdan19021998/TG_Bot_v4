@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NotNull
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class UserEmployment extends AbstractEntity{
+public class UserEmployment extends AbstractEntity {
 
     private Integer userId;
 

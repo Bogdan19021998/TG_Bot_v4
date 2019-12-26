@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @MappedSuperclass
 @NoArgsConstructor
@@ -16,8 +16,6 @@ public class AbstractEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
     private Integer id;
-
-    private Integer userId;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
