@@ -42,22 +42,22 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
 
                 UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
 
-                boolean isSent;
+                boolean isSent = false;
+
+                if (result.getOptionalRequest() != null) {
+                    messageSender.send(result.getOptionalRequest());
+                }
 
                 if (step.getStepId() == result.getNextStep()) {
-                    isSent = messageSender.send(result.getRequest());
-                    if (isSent) {
-                        userRepository.save(result.getUpdatedUser());
+                    if (result.getRequest() != null) {
+                        isSent = messageSender.send(result.getRequest());
+
+                        if (isSent)
+                            userRepository.save(result.getUpdatedUser());
                     }
                 } else {
-
-                    if (result.getOptionalRequest() != null) {
-                        messageSender.send(result.getOptionalRequest());
-                    }
-
                     BaseRequest<?, ?> request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
                     isSent = messageSender.send(request);
-
                     if (isSent) {
                         userRepository.setNewStep(userId, result.getNextStep());
                         System.out.println("user " + UpdateTool.getUserId(update) + " set status " + result.getNextStep());

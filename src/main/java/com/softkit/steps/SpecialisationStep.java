@@ -5,8 +5,6 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.*;
 import com.softkit.database.User;
-import com.softkit.database.Status;
-import com.softkit.repository.UserStatusRepository;
 import com.softkit.service.SpecializationService;
 import com.softkit.vo.Specialization;
 import com.softkit.vo.Step;
@@ -23,8 +21,7 @@ public class SpecialisationStep extends AbstractStep {
 
     private final SpecializationService specializationService;
 
-    public SpecialisationStep(UserStatusRepository userStatusRepository, SpecializationService specializationService) {
-        super(userStatusRepository);
+    public SpecialisationStep(SpecializationService specializationService) {
         this.specializationService = specializationService;
     }
 
@@ -32,23 +29,30 @@ public class SpecialisationStep extends AbstractStep {
     public UpdateProcessorResult process(Update update, User user) {
 
         Long chatId = UpdateTool.getChatId(update);
+        Step nextStep = getStepId();
+        String outgoingMessage;
 
-        outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
-        BaseRequest<?,?> botAnswer = new SendMessage(chatId, outgoingMessage);
-        BaseRequest<?,?> optional = null;
-
-        String data = update.callbackQuery().data();
+        BaseRequest<?, ?> botAnswer = null;
+        BaseRequest<?, ?> optional = null;
 
         if (UpdateTool.isCallback(update)) {
+            String data = update.callbackQuery().data();
 
-            if (data.contentEquals(StepHolder.FINISH_SELECTION) &&
-                    ( specializationService.findAllUserSpecialization(user).size() >= 1 &&
-                            specializationService.findAllUserSpecialization(user).size() <= 5 )) {
+            if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
 
-                nextStep = Step.TECHNOLOGIES;
-                outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
-                botAnswer = new SendMessage(chatId, outgoingMessage);
-                optional = new AnswerCallbackQuery( update.callbackQuery().id() );
+                if (specializationService.findAllUserSpecialization(user).size() >= 1 &&
+                        specializationService.findAllUserSpecialization(user).size() <= 5) {
+
+                    nextStep = Step.TECHNOLOGIES;
+
+                    outgoingMessage = nextStep.getBotMessage();
+                    botAnswer = new SendMessage(chatId, outgoingMessage);
+                    optional = new AnswerCallbackQuery(update.callbackQuery().id());
+                } else {
+                    outgoingMessage = nextStep.getUserMistakeResponse();
+                    botAnswer = new SendMessage(chatId, outgoingMessage);
+                }
+
             } else if (Specialization.hasEnumWithName(data)) {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
@@ -75,7 +79,6 @@ public class SpecialisationStep extends AbstractStep {
                     botAnswer = editMessageText;
                 }
             }
-
         }
 
         return new UpdateProcessorResult(chatId, botAnswer, nextStep, user, optional);
@@ -95,7 +98,7 @@ public class SpecialisationStep extends AbstractStep {
         List<String> specialisationsCallbacks = new ArrayList<>();
         Stream.of(Specialization.values()).forEach(specialization -> specialisationsCallbacks.add(specialization.name()));
 
-        InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, specialisationsCallbacks,2, true);
-        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
+        InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, specialisationsCallbacks, 2, true);
+        return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
     }
 }

@@ -7,9 +7,7 @@ import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.softkit.database.Status;
 import com.softkit.database.User;
-import com.softkit.repository.UserStatusRepository;
 import com.softkit.service.EmploymentsService;
 import com.softkit.vo.*;
 import org.springframework.stereotype.Component;
@@ -23,28 +21,35 @@ public class EmploymentStep extends AbstractStep {
 
     private final EmploymentsService employmentsService;
 
-    public EmploymentStep(UserStatusRepository userStatusRepository, EmploymentsService employmentsService) {
-        super(userStatusRepository);
+    public EmploymentStep(EmploymentsService employmentsService) {
         this.employmentsService = employmentsService;
     }
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
+        Step nextStep = getStepId();
 
-        outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
-        BaseRequest<?,?> botAnswer = new SendMessage(chatId, outgoingMessage);
-        BaseRequest<?,?> optional = null;
+        String outgoingMessage;
+        BaseRequest<?, ?> botAnswer = null;
+        BaseRequest<?, ?> optional = null;
 
-        String data = update.callbackQuery().data();
 
         if (UpdateTool.isCallback(update)) {
 
-            if (data.contentEquals(StepHolder.FINISH_SELECTION) && employmentsService.findAllUserEmployments(user).size() >= 1) {
-                nextStep = Step.MIN_SALARY;
-                outgoingMessage = userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
-                botAnswer = new SendMessage(chatId, outgoingMessage);
-                optional = new AnswerCallbackQuery( update.callbackQuery().id() );
+            String data = update.callbackQuery().data();
+            if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
+                if (employmentsService.findAllUserEmployments(user).size() >= 1) {
+
+                    nextStep = Step.MIN_SALARY;
+                    outgoingMessage = nextStep.getBotMessage();
+                    botAnswer = new SendMessage(chatId, outgoingMessage);
+                    optional = new AnswerCallbackQuery(update.callbackQuery().id());
+                } else {
+                    outgoingMessage = nextStep.getUserMistakeResponse();
+                    botAnswer = new SendMessage(chatId, outgoingMessage);
+                }
+
             } else if (Employment.hasEnumWithName(data)) {
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
                 InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
@@ -72,6 +77,7 @@ public class EmploymentStep extends AbstractStep {
         }
 
         return new UpdateProcessorResult(chatId, botAnswer, nextStep, user, optional);
+
     }
 
     @Override
@@ -88,7 +94,7 @@ public class EmploymentStep extends AbstractStep {
         List<String> callbacks = new ArrayList<>();
         Stream.of(Employment.values()).forEach(experience -> callbacks.add(experience.name()));
 
-        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
+        return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(
                 new InlineKeyboardMarkup(UpdateTool.getButtonArray(employments, callbacks, 1, true))
         );
     }

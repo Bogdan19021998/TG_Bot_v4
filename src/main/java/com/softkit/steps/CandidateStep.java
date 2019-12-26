@@ -4,9 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
-import com.softkit.database.Status;
 import com.softkit.repository.UserFieldsSetter;
-import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
@@ -19,28 +17,28 @@ public class CandidateStep extends AbstractStep {
 
     private final UserFieldsSetter userFieldsSetter;
 
-    public CandidateStep(UserStatusRepository userStatusRepository, UserFieldsSetter userFieldsSetter) {
-        super(userStatusRepository);
+    public CandidateStep(UserFieldsSetter userFieldsSetter) {
         this.userFieldsSetter = userFieldsSetter;
     }
 
     public UpdateProcessorResult process(Update update, User user) {
 
         Long chatId = UpdateTool.getChatId(update);
+        Step nextStep = getStepId();
+        String outgoingMessage;
 
-        outgoingMessage = UpdateTool.getUpdateMessage(update).text();
-        int userTextWords = TextParser.wordCount(outgoingMessage);
+        String userText = UpdateTool.getUpdateMessage(update).text();
+        int userTextWords = TextParser.wordCount(userText);
 
-        String botText;
-        if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(outgoingMessage)) {
-            userFieldsSetter.setCandidate(user, TextParser.fixSpacing(outgoingMessage));
+        if ( (userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(userText)) {
+            userFieldsSetter.setCandidate(user, TextParser.fixSpacing(userText));
             nextStep = Step.SPECIALISATIONS;
-            botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
+            outgoingMessage = nextStep.getBotMessage();
         } else {
-            botText = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
+            outgoingMessage = nextStep.getUserMistakeResponse();
         }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, botText), nextStep, user);
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }
 
     public Step getStepId() {

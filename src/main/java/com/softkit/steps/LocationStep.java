@@ -4,10 +4,8 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.softkit.database.Status;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
-import com.softkit.repository.UserStatusRepository;
 import com.softkit.vo.*;
 import org.springframework.stereotype.Component;
 
@@ -21,23 +19,25 @@ public class LocationStep extends AbstractStep {
 
     private final UserFieldsSetter userFieldsSetter;
 
-    public LocationStep(UserStatusRepository userStatusRepository, UserFieldsSetter userFieldsSetter) {
-        super(userStatusRepository);
+    public LocationStep(UserFieldsSetter userFieldsSetter) {
         this.userFieldsSetter = userFieldsSetter;
     }
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
+        Step nextStep = getStepId();
+        String outgoingMessage;
+
         BaseRequest<?,?> optional = null;
 
         if (UpdateTool.isCallback(update) && City.hasEnumWithName(update.callbackQuery().data())) {
             userFieldsSetter.setCity(user, City.valueOf(update.callbackQuery().data()));
             nextStep = Step.EMPLOYMENT;
             optional = UpdateTool.getSelectedItemBaseRequest(chatId, update.callbackQuery());
-            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
+            outgoingMessage = nextStep.getBotMessage();
         } else {
-            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
+            outgoingMessage = nextStep.getUserMistakeResponse();
         }
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);

@@ -5,9 +5,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.softkit.database.Status;
 import com.softkit.database.User;
-import com.softkit.repository.UserStatusRepository;
 import com.softkit.service.TechnologiesService;
 import com.softkit.vo.Step;
 import com.softkit.vo.TextParser;
@@ -22,14 +20,15 @@ public class TechnologiesStep extends AbstractStep {
 
     private TechnologiesService technologiesService;
 
-    public TechnologiesStep(UserStatusRepository userStatusRepository, TechnologiesService technologiesService) {
-        super(userStatusRepository);
+    public TechnologiesStep(TechnologiesService technologiesService) {
         this.technologiesService = technologiesService;
     }
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateTool.getChatId(update);
+        Step nextStep = getStepId();
+        String outgoingMessage;
 
         String userText = UpdateTool.getUpdateMessage(update).text();
 
@@ -38,15 +37,12 @@ public class TechnologiesStep extends AbstractStep {
             userText = TextParser.fixSpacing(userText);
             String[] technologiesStr = userText.split(" ");
             technologiesService.addAllTechnologies(user, technologiesStr);
-            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getBotMessage).get();
+            outgoingMessage = nextStep.getBotMessage();
         } else {
-            outgoingMessage = this.userStatusRepository.findUserStatusByStep(nextStep).map(Status::getUserMistakeResponse).get();
+            outgoingMessage = nextStep.getUserMistakeResponse();
         }
 
-        BaseRequest<?,?> optional = null;
-        if (UpdateTool.isCallback(update)) {
-            optional = new AnswerCallbackQuery( update.callbackQuery().id() );
-        }
+        BaseRequest<?,?> optional = UpdateTool.isCallback(update) ? new AnswerCallbackQuery(update.callbackQuery().id()) : null;
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);
     }
