@@ -70,4 +70,9 @@ public class UserService implements UserFieldsSetter {
     public void setSalaryFrom(User user, Integer price) {
         user.setSalaryFrom( price );
     }
+
+    @Override
+    public void setPhone(User user, String phoneNumber) {
+        user.setPhone(phoneNumber);
+    }
 }

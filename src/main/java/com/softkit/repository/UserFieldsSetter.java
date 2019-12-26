@@ -23,6 +23,5 @@ public interface UserFieldsSetter {
     
     void setSalaryFrom(User user, Integer price);
 
-
-
+    void setPhone(User user, String phoneNumber);
 }

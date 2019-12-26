@@ -21,25 +21,21 @@ public class MaxSalaryStep extends AbstractStep {
     }
 
     public UpdateProcessorResult process(Update update, User user) {
+
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
-        String outgoingMessage;
-        BaseRequest<?,?> baseRequest = null;
+        String outgoingMessage = nextStep.getUserMistakeResponse();
 
-        String price = UpdateUtils.getMessage(update).text();
-        if (UpdateUtils.isMessage(update)) {
-
+        if (UpdateUtils.hasMassageText(update)) {
+            String price = UpdateUtils.getMessage(update).text();
             if (TextParser.isIntegerText(price) && Integer.parseInt(price) >= 10 && Integer.parseInt(price) <= 99999) {
                 userFieldsSetter.setSalaryUpTo(user, Integer.parseInt(price));
                 nextStep = Step.DONE_BASIC_REGISTRATION;
                 outgoingMessage = nextStep.getBotMessage();
-            } else {
-                outgoingMessage = nextStep.getUserMistakeResponse();
             }
-            baseRequest = new SendMessage(chatId, outgoingMessage);
         }
 
-        return new UpdateProcessorResult(chatId, baseRequest, nextStep, user);
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }
 
     public Step getCurrentStepId() {

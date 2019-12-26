@@ -31,19 +31,20 @@ public class TechnologiesStep extends AbstractStep {
         String outgoingMessage;
         BaseRequest<?,?> optional = null;
 
-        String userText = UpdateUtils.getMessageOrCallbackMessage(update).text();
-
         if ( UpdateUtils.isCallback(update) && update.callbackQuery().data().contentEquals(StepHolder.FINISH_SELECTION) ) {
             optional = new AnswerCallbackQuery(update.callbackQuery().id());
             nextStep = Step.EXPERIENCE;
             outgoingMessage = nextStep.getBotMessage();
-        } else if (UpdateUtils.isMessage(update) && TextParser.isEngLettDigSpecSymbText(userText)){
-            userText = TextParser.fixSpacing(userText);
-            String[] technologiesStr = userText.split(" ");
+
+        } else if (UpdateUtils.hasMassageText(update) &&
+                TextParser.isEngLetterDigitsSpecialSymbolsText(update.message().text())){
+
+            String[] technologiesStr = TextParser.fixSpacing( update.message().text() ).split(" ");
             technologiesService.addAllTechnologies(user, technologiesStr);
             // duplicated code ??
             nextStep = Step.EXPERIENCE;
             outgoingMessage = nextStep.getBotMessage();
+
         } else {
             outgoingMessage = nextStep.getUserMistakeResponse();
         }

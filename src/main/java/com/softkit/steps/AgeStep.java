@@ -1,6 +1,9 @@
 package com.softkit.steps;
 
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.model.request.KeyboardButton;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
@@ -24,26 +27,25 @@ public class AgeStep extends AbstractStep {
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
 
-        BaseRequest<?,?> baseRequest = null;
+        String outgoingMessage = nextStep.getUserMistakeResponse();
+        BaseRequest<?,?> baseRequest = new SendMessage(chatId, outgoingMessage);
 
-        if (UpdateUtils.isMessage(update)) {
+        if (UpdateUtils.hasMassageText(update)) {
             String userText = UpdateUtils.getMessage(update).text();
-
-            String outgoingMessage;
-
             if (TextParser.isIntegerText(userText)) {
                 int age = Integer.parseInt(userText);
                 if (age >= 18 && age <= 99) {
                     nextStep = Step.SUMMARY;
                     userFieldsSetter.setAge(user, age);
                     outgoingMessage = nextStep.getBotMessage();
-                }else{
-                    outgoingMessage = nextStep.getUserMistakeResponse();
+                    baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
                 }
-                baseRequest = new SendMessage(chatId, outgoingMessage);
+            } else if (userText.contentEquals("Пропустить")) {
+                nextStep = Step.SUMMARY;
+                outgoingMessage = nextStep.getBotMessage();
+                baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             }
         }
-
         return new UpdateProcessorResult(chatId, baseRequest, nextStep, user);
     }
 
@@ -54,6 +56,7 @@ public class AgeStep extends AbstractStep {
 
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
-        return updateProcessorResult.getRequest();
+        KeyboardButton[] buttons = new KeyboardButton[] {new KeyboardButton("Пропустить")};
+        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(new ReplyKeyboardMarkup(buttons).resizeKeyboard(true));
     }
 }

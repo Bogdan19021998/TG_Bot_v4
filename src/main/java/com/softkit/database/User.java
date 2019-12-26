@@ -52,13 +52,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Step step;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private EnglishLevel englishLevel;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Experience experience;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private City city;
 
     @CreationTimestamp

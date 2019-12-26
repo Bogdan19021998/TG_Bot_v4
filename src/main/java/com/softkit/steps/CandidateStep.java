@@ -27,7 +27,7 @@ public class CandidateStep extends AbstractStep {
         Step nextStep = getCurrentStepId();
         BaseRequest<?,?> baseRequest = null;
 
-        if (UpdateUtils.isMessage(update)) {
+        if (UpdateUtils.hasMassageText(update)) {
             String userText = UpdateUtils.getMessage(update).text();
             int userTextWords = TextParser.wordCount(userText);
             String outgoingMessage;

@@ -16,6 +16,6 @@ public class UserEmployment extends AbstractEntity {
 
     private Integer userId;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Employment employment;
 }

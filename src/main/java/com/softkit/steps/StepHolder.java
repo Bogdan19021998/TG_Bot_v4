@@ -14,17 +14,21 @@ import static com.softkit.vo.Step.*;
 @RequiredArgsConstructor
 public class StepHolder {
 
-    private final StartStep startStep;                    // 0
-    private final CandidateStep candidateStep;            // 1
-    private final SpecialisationStep specialisationStep;  // 2
-    private final TechnologiesStep technologiesStep;      // 3
-    private final ExperienceStep experienceStep;          // 4
-    private final EnglishLevelStep englishLevelStep;      // 5
-    private final LocationStep locationStep;              // 6
-    private final EmploymentStep employmentStep;          // 7
-    private final MinSalaryStep minSalaryStep;            // 8
-    private final MaxSalaryStep maxSalaryStep;            // 9
+    private final StartStep startStep;                                 // 0
+    private final CandidateStep candidateStep;                         // 1
+    private final SpecialisationStep specialisationStep;               // 2
+    private final TechnologiesStep technologiesStep;                   // 3
+    private final ExperienceStep experienceStep;                       // 4
+    private final EnglishLevelStep englishLevelStep;                   // 5
+    private final LocationStep locationStep;                           // 6
+    private final EmploymentStep employmentStep;                       // 7
+    private final MinSalaryStep minSalaryStep;                         // 8
+    private final MaxSalaryStep maxSalaryStep;                         // 9
     private final DoneBasicRegistrationStep doneBasicRegistrationStep; // 10
+    private final PhoneStep phoneStep;                                 // 11
+    private final AgeStep ageStep;                                     // 12
+    private final SummaryStep summaryStep;                             // 13
+    private final DoneRegistrationStep doneRegistrationStep;           // 14
 
     public static final String FINISH_SELECTION = "com.softkit.FINISH_SELECTION";
     private static final String START_COMMAND = "/start";
@@ -43,6 +47,10 @@ public class StepHolder {
         ALL_STEPS.put(MIN_SALARY, minSalaryStep);
         ALL_STEPS.put(MAX_SALARY, maxSalaryStep);
         ALL_STEPS.put(DONE_BASIC_REGISTRATION, doneBasicRegistrationStep);
+        ALL_STEPS.put(PHONE, phoneStep);
+        ALL_STEPS.put(AGE, ageStep);
+        ALL_STEPS.put(SUMMARY, summaryStep);
+        ALL_STEPS.put(DONE_REGISTRATION, doneRegistrationStep);
     }
 
     public AbstractStep getStep(Step step) {

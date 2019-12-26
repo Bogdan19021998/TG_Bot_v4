@@ -51,6 +51,10 @@ public class UpdateUtils {
         return u.message() != null;
     }
 
+    public static boolean hasMassageText(Update u) {
+        return isMessage(u) && u.message().text() != null;
+    }
+
     public static Integer getUserId(Update u) {
         if (u.callbackQuery() != null) {
             return u.callbackQuery().from().id();

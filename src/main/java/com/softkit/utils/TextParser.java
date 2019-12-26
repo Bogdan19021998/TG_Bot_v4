@@ -1,5 +1,7 @@
 package com.softkit.utils;
 
+import org.springframework.lang.NonNull;
+
 public class TextParser {
 
     public static int wordCount(String text) {
@@ -11,7 +13,7 @@ public class TextParser {
         return text.replaceAll(" {2,}", " ");
     }
 
-    public static boolean isLetterText(String text) {
+    public static boolean isLetterText(@NonNull String text) {
         for (int i = 0; i < text.length(); i++) {
             if ( !Character.isLetter(text.charAt(i)) && text.charAt(i) != ' ' ) {
                 return false;
@@ -20,7 +22,7 @@ public class TextParser {
         return true;
     }
 
-    public static boolean isEngLettDigSpecSymbText(String text) {
+    public static boolean isEngLetterDigitsSpecialSymbolsText(@NonNull String text) {
         for (int i = 0; i < text.length(); i++) {
             if ((int) text.charAt(i) < 32 || (int) text.charAt(i) > 126) {
                 return false;
@@ -29,7 +31,7 @@ public class TextParser {
         return true;
     }
 
-    public static boolean isIntegerText(String text) {
+    public static boolean isIntegerText(@NonNull String text) {
         for (int i = 0; i < text.length(); i++) {
             if ( !Character.isDigit(text.charAt(i)) ) {
                 return false;
