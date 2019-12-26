@@ -9,7 +9,7 @@ import com.softkit.service.SpecializationService;
 import com.softkit.vo.Specialization;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.utils.UpdateUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -28,14 +28,14 @@ public class SpecialisationStep extends AbstractStep {
     @Override
     public UpdateProcessorResult process(Update update, User user) {
 
-        Long chatId = UpdateTool.getChatId(update);
-        Step nextStep = getStepId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
         String outgoingMessage;
 
         BaseRequest<?, ?> botAnswer = null;
         BaseRequest<?, ?> optional = null;
 
-        if (UpdateTool.isCallback(update)) {
+        if (UpdateUtils.isCallback(update)) {
             String data = update.callbackQuery().data();
 
             if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
@@ -56,23 +56,23 @@ public class SpecialisationStep extends AbstractStep {
             } else if (Specialization.hasEnumWithName(data)) {
 
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
-                InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
+                InlineKeyboardButton inlineKeyboardButton = UpdateUtils.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
 
                 if (inlineKeyboardButton != null) {
-                    boolean hasMarker = UpdateTool.hasMarker(inlineKeyboardButton.text());
+                    boolean hasMarker = UpdateUtils.hasMarker(inlineKeyboardButton.text());
 
                     if (hasMarker) {
                         specializationService.removeUserSpecialisation(user, Specialization.valueOf(data));
-                        inlineKeyboardButton = UpdateTool.removeMarkerFromButton(inlineKeyboardButton);
+                        inlineKeyboardButton = UpdateUtils.removeMarkerFromButton(inlineKeyboardButton);
                         outgoingMessage = "Ты отменил выбор специализации: " + inlineKeyboardButton.text() + ".";
                     } else {
                         specializationService.addUserSpecialisation(user, Specialization.valueOf(data));
                         outgoingMessage = "Круто, ты выбрал специализацию: " + inlineKeyboardButton.text() +
                                 ". Можешь выбрать еще несколько или завершить этот этап.";
-                        inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
+                        inlineKeyboardButton = UpdateUtils.addMarkerToButton(inlineKeyboardButton);
                     }
 
-                    UpdateTool.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
+                    UpdateUtils.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
 
                     EditMessageText editMessageText = new EditMessageText(chatId, update.callbackQuery().message().messageId(), outgoingMessage);
                     editMessageText.replyMarkup(inlineKeyboardMarkup);
@@ -85,7 +85,7 @@ public class SpecialisationStep extends AbstractStep {
     }
 
     @Override
-    public Step getStepId() {
+    public Step getCurrentStepId() {
         return Step.SPECIALISATIONS;
     }
 
@@ -98,7 +98,7 @@ public class SpecialisationStep extends AbstractStep {
         List<String> specialisationsCallbacks = new ArrayList<>();
         Stream.of(Specialization.values()).forEach(specialization -> specialisationsCallbacks.add(specialization.name()));
 
-        InlineKeyboardButton[][] inlineKeyboardButtons = UpdateTool.getButtonArray(specialisations, specialisationsCallbacks, 2, true);
+        InlineKeyboardButton[][] inlineKeyboardButtons = UpdateUtils.getButtonArray(specialisations, specialisationsCallbacks, 2, true);
         return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(new InlineKeyboardMarkup(inlineKeyboardButtons));
     }
 }

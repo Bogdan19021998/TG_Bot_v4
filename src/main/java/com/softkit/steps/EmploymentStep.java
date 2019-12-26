@@ -1,5 +1,6 @@
 package com.softkit.steps;
 
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
@@ -9,6 +10,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.service.EmploymentsService;
+import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.*;
 import org.springframework.stereotype.Component;
 
@@ -27,20 +29,18 @@ public class EmploymentStep extends AbstractStep {
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
-        Long chatId = UpdateTool.getChatId(update);
-        Step nextStep = getStepId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
 
         String outgoingMessage;
         BaseRequest<?, ?> botAnswer = null;
         BaseRequest<?, ?> optional = null;
 
-
-        if (UpdateTool.isCallback(update)) {
+        if (UpdateUtils.isCallback(update)) {
 
             String data = update.callbackQuery().data();
             if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
                 if (employmentsService.findAllUserEmployments(user).size() >= 1) {
-
                     nextStep = Step.MIN_SALARY;
                     outgoingMessage = nextStep.getBotMessage();
                     botAnswer = new SendMessage(chatId, outgoingMessage);
@@ -52,23 +52,23 @@ public class EmploymentStep extends AbstractStep {
 
             } else if (Employment.hasEnumWithName(data)) {
                 InlineKeyboardMarkup inlineKeyboardMarkup = update.callbackQuery().message().replyMarkup();
-                InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
+                InlineKeyboardButton inlineKeyboardButton = UpdateUtils.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data);
 
                 if (inlineKeyboardButton != null) {
-                    boolean hasMarker = UpdateTool.hasMarker(inlineKeyboardButton.text());
+                    boolean hasMarker = UpdateUtils.hasMarker(inlineKeyboardButton.text());
 
                     if (hasMarker) {
                         employmentsService.removeUserEmployment(user, Employment.valueOf(data));
-                        inlineKeyboardButton = UpdateTool.removeMarkerFromButton(inlineKeyboardButton);
+                        inlineKeyboardButton = UpdateUtils.removeMarkerFromButton(inlineKeyboardButton);
                     } else {
                         employmentsService.addUserEmployment(user, Employment.valueOf(data));
-                        inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
+                        inlineKeyboardButton = UpdateUtils.addMarkerToButton(inlineKeyboardButton);
                     }
 
-                    UpdateTool.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
+                    UpdateUtils.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), data, inlineKeyboardButton);
 
-                    outgoingMessage = UpdateTool.getUpdateMessage(update).text();
-                    EditMessageText editMessageText = new EditMessageText(chatId, update.callbackQuery().message().messageId(), outgoingMessage);
+                    Message message = UpdateUtils.getCallbackMessage(update);
+                    EditMessageText editMessageText = new EditMessageText(chatId, message.messageId(), message.text());
                     editMessageText.replyMarkup(inlineKeyboardMarkup);
                     botAnswer = editMessageText;
                 }
@@ -81,7 +81,7 @@ public class EmploymentStep extends AbstractStep {
     }
 
     @Override
-    public Step getStepId() {
+    public Step getCurrentStepId() {
         return Step.EMPLOYMENT;
     }
 
@@ -95,7 +95,7 @@ public class EmploymentStep extends AbstractStep {
         Stream.of(Employment.values()).forEach(experience -> callbacks.add(experience.name()));
 
         return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArray(employments, callbacks, 1, true))
+                new InlineKeyboardMarkup(UpdateUtils.getButtonArray(employments, callbacks, 1, true))
         );
     }
 

@@ -18,5 +18,5 @@ public interface UserTechnologyRepository extends CrudRepository<UserTechnology,
     @Query(value = "delete from UserTechnology us where us.userId = :userId")
     @Modifying
     @Transactional
-    Integer removeAllUserTechnologies( Integer userId );
+    void removeAllUserTechnologies( Integer userId );
 }

@@ -6,6 +6,7 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
+import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.*;
 import org.springframework.stereotype.Component;
 
@@ -24,16 +25,16 @@ public class ExperienceStep extends AbstractStep {
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
-        Long chatId = UpdateTool.getChatId(update);
-        Step nextStep = getStepId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
         String outgoingMessage;
 
         BaseRequest<?,?> optional = null;
 
-        if (UpdateTool.isCallback(update) && Experience.hasEnumWithName(update.callbackQuery().data())) {
+        if (UpdateUtils.isCallback(update) && Experience.hasEnumWithName(update.callbackQuery().data())) {
             userFieldsSetter.setExperience(user, Experience.valueOf(update.callbackQuery().data()));
             nextStep = Step.ENGLISH_LEVEL;
-            optional = UpdateTool.getSelectedItemBaseRequest(chatId, update.callbackQuery());
+            optional = UpdateUtils.getSelectedItemBaseRequest(chatId, update.callbackQuery());
             outgoingMessage = nextStep.getBotMessage();
         } else {
             outgoingMessage = nextStep.getUserMistakeResponse();
@@ -43,7 +44,7 @@ public class ExperienceStep extends AbstractStep {
     }
 
     @Override
-    public Step getStepId() {
+    public Step getCurrentStepId() {
         return Step.EXPERIENCE;
     }
 
@@ -57,7 +58,7 @@ public class ExperienceStep extends AbstractStep {
         Stream.of(Experience.values()).forEach(experience -> callbacks.add(experience.name()));
 
         return ((SendMessage) updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArray(experiences, callbacks, 1, false))
+                new InlineKeyboardMarkup(UpdateUtils.getButtonArray(experiences, callbacks, 1, false))
         );
     }
 

@@ -45,10 +45,10 @@ public class User {
 
     private Integer userLocation;
 
-    @Range (min = 99, max = 99999 )
+    @Range (min = 10, max = 99999 )
     private Integer salaryFrom;
 
-    @Range (min = 99, max = 99999 )
+    @Range (min = 10, max = 99999 )
     private Integer salaryUpTo;
 
     @Enumerated(EnumType.ORDINAL)

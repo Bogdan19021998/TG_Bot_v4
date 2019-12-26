@@ -1,7 +1,6 @@
 package com.softkit.repository;
 
 import com.softkit.database.User;
-import com.softkit.vo.Step;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,13 +10,5 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Integer> {
 
     Optional<User> findUserById(Integer userId);
-
-//    todo remove it from here
-    default void setNewStep(Integer userId, Step step) {
-        Optional<User> optionalUser = findUserById(userId);
-        User user = optionalUser.orElse(new User(userId));
-        user.setStep(step);
-        save(user);
-    }
 
 }

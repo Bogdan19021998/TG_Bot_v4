@@ -12,7 +12,7 @@ public abstract class AbstractStep {
 
     public abstract UpdateProcessorResult process(Update update, User user);
 
-    public abstract Step getStepId();
+    public abstract Step getCurrentStepId();
 
     public abstract BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult);
 

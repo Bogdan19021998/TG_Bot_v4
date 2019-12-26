@@ -1,14 +1,13 @@
 package com.softkit;
 
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.request.AnswerCallbackQuery;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.softkit.database.User;
 import com.softkit.repository.UserRepository;
 import com.softkit.steps.AbstractStep;
 import com.softkit.steps.StepHolder;
 import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.utils.UpdateUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -30,38 +29,37 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
     @Override
     public void process(Update update) {
 
-        Integer userId = UpdateTool.getUserId(update);
+        Integer userId = UpdateUtils.getUserId(update);
 
         if (userId != null)
-            if (UpdateTool.getUpdateMessage(update).text() != null || UpdateTool.isCallback(update)) {
+            if (UpdateUtils.getMessageOrCallbackMessage(update).text() != null || UpdateUtils.isCallback(update)) {
                 Optional<User> user = userRepository.findUserById(userId);
 
                 AbstractStep step = user.map(u -> stepHolder.getStep(u.getStep())).orElseGet(stepHolder::getStartStep);
 
-                System.out.println("update from user " + UpdateTool.getUserId(update) + " with status " + step.getStepId());
+                System.out.println("update from user " + UpdateUtils.getUserId(update) + " with status " + step.getCurrentStepId());
 
                 UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
 
-                boolean isSent = false;
-
+                // optional request
                 if (result.getOptionalRequest() != null) {
                     messageSender.send(result.getOptionalRequest());
                 }
 
-                if (step.getStepId() == result.getNextStep()) {
-                    if (result.getRequest() != null) {
-                        isSent = messageSender.send(result.getRequest());
-
-                        if (isSent)
-                            userRepository.save(result.getUpdatedUser());
-                    }
+                // main request
+                BaseRequest<?,?> baseRequest;
+                boolean isSent;
+                if (step.getCurrentStepId() == result.getNextStep()) {
+                    baseRequest = result.getRequest();
                 } else {
-                    BaseRequest<?, ?> request = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
-                    isSent = messageSender.send(request);
-                    if (isSent) {
-                        userRepository.setNewStep(userId, result.getNextStep());
-                        System.out.println("user " + UpdateTool.getUserId(update) + " set status " + result.getNextStep());
-                    }
+                    result.getUpdatedUser().setStep(result.getNextStep());
+                    baseRequest = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
+                }
+
+                if (baseRequest != null) {
+                    isSent = messageSender.send(result.getRequest());
+                    if (isSent)
+                        userRepository.save(result.getUpdatedUser());
                 }
 
             }

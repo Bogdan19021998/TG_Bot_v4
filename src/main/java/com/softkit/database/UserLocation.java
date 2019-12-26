@@ -2,7 +2,6 @@ package com.softkit.database;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

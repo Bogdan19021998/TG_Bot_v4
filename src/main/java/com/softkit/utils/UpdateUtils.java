@@ -1,4 +1,4 @@
-package com.softkit.vo;
+package com.softkit.utils;
 
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
@@ -13,11 +13,11 @@ import java.util.List;
 
 import static com.softkit.steps.StepHolder.FINISH_SELECTION;
 
-public class UpdateTool {
+public class UpdateUtils {
 
 
     // getters
-    public static Message getUpdateMessage(Update u) {
+    public static Message getMessageOrCallbackMessage(Update u) {
         Message message = null;
         if (u.callbackQuery() != null) {
             message = u.callbackQuery().message();
@@ -27,8 +27,28 @@ public class UpdateTool {
         return message;
     }
 
+    public static Message getMessage(Update u) {
+        Message message = null;
+        if (u.message() != null) {
+            message = u.message();
+        }
+        return message;
+    }
+
+    public static Message getCallbackMessage(Update u) {
+        Message message = null;
+        if (u.callbackQuery() != null) {
+            message = u.callbackQuery().message();
+        }
+        return message;
+    }
+
     public static boolean isCallback(Update u) {
         return u.callbackQuery() != null;
+    }
+
+    public static boolean isMessage(Update u) {
+        return u.message() != null;
     }
 
     public static Integer getUserId(Update u) {
@@ -41,7 +61,7 @@ public class UpdateTool {
     }
 
     public static Long getChatId(Update u) {
-        Message message = UpdateTool.getUpdateMessage(u);
+        Message message = UpdateUtils.getMessageOrCallbackMessage(u);
         if (message != null) {
             return message.chat().id();
         }
@@ -50,6 +70,7 @@ public class UpdateTool {
 
 
     // button array
+    @SuppressWarnings("unused")
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings) {
         return getButtonArray(strings, strings, 1, false);
     }
@@ -58,6 +79,7 @@ public class UpdateTool {
         return getButtonArray(strings, strings, 1, true);
     }
 
+    @SuppressWarnings("unused")
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns, boolean exitButton) {
         return getButtonArray(strings, strings, columns, exitButton);
     }
@@ -164,10 +186,10 @@ public class UpdateTool {
     public static BaseRequest<?, ?> getSelectedItemBaseRequest(Long chatId, CallbackQuery callbackQuery) {
         String experience = callbackQuery.data();
         InlineKeyboardMarkup inlineKeyboardMarkup = callbackQuery.message().replyMarkup();
-        InlineKeyboardButton inlineKeyboardButton = UpdateTool.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), experience);
+        InlineKeyboardButton inlineKeyboardButton = UpdateUtils.findButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), experience);
         if (inlineKeyboardButton != null) {
-            inlineKeyboardButton = UpdateTool.addMarkerToButton(inlineKeyboardButton);
-            UpdateTool.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), experience, inlineKeyboardButton);
+            inlineKeyboardButton = UpdateUtils.addMarkerToButton(inlineKeyboardButton);
+            UpdateUtils.changeButtonByCallback(inlineKeyboardMarkup.inlineKeyboard(), experience, inlineKeyboardButton);
             EditMessageText editMessageText = new EditMessageText(chatId, callbackQuery.message().messageId(),
                     callbackQuery.message().text());
             editMessageText.replyMarkup(inlineKeyboardMarkup);

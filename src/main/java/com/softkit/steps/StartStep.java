@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.utils.UpdateUtils;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,11 +14,11 @@ public class StartStep extends AbstractStep {
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
-        Long chatId = UpdateTool.getChatId(update);
-        Step nextStep = getStepId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
         String outgoingMessage;
 
-        if (UpdateTool.getUpdateMessage(update).text().contentEquals(StepHolder.getStartCommand())) {
+        if (UpdateUtils.getMessageOrCallbackMessage(update).text().contentEquals(StepHolder.getStartCommand())) {
             nextStep = Step.CANDIDATE;
             outgoingMessage = nextStep.getBotMessage();
         } else
@@ -28,7 +28,7 @@ public class StartStep extends AbstractStep {
     }
 
     @Override
-    public Step getStepId() {
+    public Step getCurrentStepId() {
         return Step.START;
     }
 

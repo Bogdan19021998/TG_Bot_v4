@@ -8,9 +8,9 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.service.TechnologiesService;
 import com.softkit.vo.Step;
-import com.softkit.vo.TextParser;
+import com.softkit.utils.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.utils.UpdateUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,29 +26,33 @@ public class TechnologiesStep extends AbstractStep {
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
-        Long chatId = UpdateTool.getChatId(update);
-        Step nextStep = getStepId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
         String outgoingMessage;
+        BaseRequest<?,?> optional = null;
 
-        String userText = UpdateTool.getUpdateMessage(update).text();
+        String userText = UpdateUtils.getMessageOrCallbackMessage(update).text();
 
-        if (TextParser.isEngLettDigSpecSymbText(userText) || (UpdateTool.isCallback(update) && update.callbackQuery().data().contentEquals(StepHolder.FINISH_SELECTION)) ) {
+        if ( UpdateUtils.isCallback(update) && update.callbackQuery().data().contentEquals(StepHolder.FINISH_SELECTION) ) {
+            optional = new AnswerCallbackQuery(update.callbackQuery().id());
             nextStep = Step.EXPERIENCE;
+            outgoingMessage = nextStep.getBotMessage();
+        } else if (UpdateUtils.isMessage(update) && TextParser.isEngLettDigSpecSymbText(userText)){
             userText = TextParser.fixSpacing(userText);
             String[] technologiesStr = userText.split(" ");
             technologiesService.addAllTechnologies(user, technologiesStr);
+            // duplicated code ??
+            nextStep = Step.EXPERIENCE;
             outgoingMessage = nextStep.getBotMessage();
         } else {
             outgoingMessage = nextStep.getUserMistakeResponse();
         }
 
-        BaseRequest<?,?> optional = UpdateTool.isCallback(update) ? new AnswerCallbackQuery(update.callbackQuery().id()) : null;
-
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);
     }
 
     @Override
-    public Step getStepId() {
+    public Step getCurrentStepId() {
         return Step.TECHNOLOGIES;
     }
 
@@ -56,7 +60,7 @@ public class TechnologiesStep extends AbstractStep {
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
         return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateTool.getButtonArrayWithExitButton(new ArrayList<>()))
+                new InlineKeyboardMarkup(UpdateUtils.getButtonArrayWithExitButton(new ArrayList<>()))
         );
     }
 

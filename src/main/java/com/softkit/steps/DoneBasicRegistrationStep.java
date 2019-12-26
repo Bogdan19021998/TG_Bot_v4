@@ -6,20 +6,21 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
-import com.softkit.vo.UpdateTool;
+import com.softkit.utils.UpdateUtils;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DoneBasicRegistrationStep extends AbstractStep {
 
     public UpdateProcessorResult process(Update update, User user) {
-        Long chatId = UpdateTool.getChatId(update);
-        Step nextStep = getStepId();
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
         String outgoingMessage = nextStep.getBotMessage();
+
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }
 
-    public Step getStepId() {
+    public Step getCurrentStepId() {
         return Step.DONE_BASIC_REGISTRATION;
     }
 

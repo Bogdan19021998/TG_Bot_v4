@@ -1,4 +1,4 @@
-package com.softkit.vo;
+package com.softkit.utils;
 
 public class TextParser {
 

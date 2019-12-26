@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LocationRepository extends CrudRepository<UserLocation, Integer> {
 
-    default void deleteById(Integer id){};
+    default void deleteById(Integer id){}
 }

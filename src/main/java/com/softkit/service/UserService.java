@@ -1,7 +1,6 @@
 package com.softkit.service;
 
 import com.softkit.database.User;
-import com.softkit.database.UserLocation;
 import com.softkit.repository.LocationRepository;
 import com.softkit.repository.UserFieldsSetter;
 import com.softkit.repository.UserRepository;
