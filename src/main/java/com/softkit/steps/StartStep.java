@@ -19,7 +19,7 @@ public class StartStep extends AbstractStep {
         String outgoingMessage;
 
         if (UpdateUtils.hasMassageText(update) && UpdateUtils.getMessage(update).text().contentEquals(StepHolder.getStartCommand())) {
-            nextStep = Step.ENGLISH_LEVEL;
+            nextStep = Step.CANDIDATE;
             outgoingMessage = nextStep.getBotMessage();
         } else
             outgoingMessage = nextStep.getUserMistakeResponse();
