@@ -2,17 +2,16 @@ package com.softkit.database;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Data
+@NonNull
 @NoArgsConstructor
-@AllArgsConstructor
-@NotNull
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserLocation {
 
@@ -22,6 +21,7 @@ public class UserLocation {
     @EqualsAndHashCode.Include
     private Integer telegramId;
 
+    @NotNull
     private Float longitude;
     private Float latitude;
 
@@ -29,5 +29,11 @@ public class UserLocation {
     @Temporal(TemporalType.TIMESTAMP)
     @Setter(value = AccessLevel.NONE )
     @Getter
-    private Date DateCreated;
+    private Date dateCreated;
+
+    public UserLocation(Integer telegramId, Float longitude, Float latitude) {
+        this.telegramId = telegramId;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
 }

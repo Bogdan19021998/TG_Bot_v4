@@ -8,9 +8,9 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
+@NotNull
 @NoArgsConstructor
 @AllArgsConstructor
-@NotNull
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class UserEmployment extends AbstractEntity {
 

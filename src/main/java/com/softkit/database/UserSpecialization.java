@@ -8,11 +8,13 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
+@NotNull
 @NoArgsConstructor
 @AllArgsConstructor
-@NotNull
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 public class UserSpecialization extends AbstractEntity {
+
+    private Integer userId;
 
     @Enumerated(EnumType.ORDINAL)
     private Specialization specialization;

@@ -7,9 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @NotNull
+@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class UserTechnology {
 
@@ -21,7 +20,6 @@ public class UserTechnology {
     private Integer id;
 
     private Integer userId;
-
     private String technology;
 
     public UserTechnology(Integer userId, String technology) {
