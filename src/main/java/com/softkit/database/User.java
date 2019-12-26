@@ -43,8 +43,6 @@ public class User {
     @Range(min = 15, max = 99)
     private Integer age;
 
-    private Integer userLocation;
-
     @Range (min = 10, max = 99999 )
     private Integer salaryFrom;
 
@@ -65,14 +63,13 @@ public class User {
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable=false)
     @Setter(value = AccessLevel.NONE )
-    @Getter
     private Date dateCreated;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Setter(value = AccessLevel.NONE )
-    @Getter
     private Date dateUpdated;
 
     public User(Integer telegramId ) {

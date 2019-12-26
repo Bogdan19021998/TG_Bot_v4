@@ -1,15 +1,12 @@
+import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
+import com.pengrad.telegrambot.model.request.KeyboardButton;
 import com.softkit.TgBotApplication;
-import com.softkit.database.User;
-import com.softkit.database.UserSpecialization;
+import com.softkit.database.*;
+import com.softkit.repository.LocationRepository;
 import com.softkit.repository.UserRepository;
 import com.softkit.repository.UserSpecialisationsRepository;
-import com.softkit.service.EmploymentsService;
-import com.softkit.service.ReferralService;
-import com.softkit.service.SpecializationService;
-import com.softkit.service.TechnologiesService;
-import com.softkit.vo.ApplicationContextProvider;
-import com.softkit.vo.Employment;
-import com.softkit.vo.Specialization;
+import com.softkit.service.*;
+import com.softkit.vo.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,17 +25,78 @@ public class Test {
     @Autowired
     private UserSpecialisationsRepository userSpecialisationsRepository;
 
+    @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private EmploymentsService employmentsService;
+
+    @Autowired
+    private ReferralService referralService;
+
+    @Autowired
+    private SpecializationService specializationService;
+
+    @Autowired
+    private TechnologiesService technologiesService;
+
+
+
     @org.junit.Test
     public void test() {
         userRepository.deleteAll();
 
-        checkSpecializations();
+//        checkSpecializations();
 
-        checkEmployment();
+//        checkEmployment();
 
-        checkTechnologies();
+//        checkTechnologies();
 
-        checkReferrals();
+//        checkReferrals();
+
+        checkUser();
+    }
+
+    private void checkUser() {
+
+        User user = userService.addUserAndSetFirstStep(5);
+
+        userRepository.save( user );
+
+        userService.setCandidate( user, "Bogdan" );
+        userService.setCity( user, City.LVIV );
+        userService.setEnglishLevel( user, EnglishLevel.INTERMEDIATE);
+        userService.setExperience( user, Experience.WITHOUT_EXPERIENCE );
+        userService.setSalaryFrom( user, 100 );
+        userService.setSalaryUpTo( user, 100 );
+
+        employmentsService.addUserEmployment(user, Employment.ONLY_OFFICE);
+        employmentsService.addUserEmployment(user, Employment.ONLY_REMOTE);
+
+        specializationService.addUserSpecialisation(user, Specialization.JAVA);
+        specializationService.addUserSpecialisation(user, Specialization.GOLANG);
+        specializationService.addUserSpecialisation(user, Specialization.IOS);
+
+        referralService.addUserReferral(user,444);
+        referralService.addUserReferral(user,2323);
+
+        technologiesService.addAllTechnologies( user, new String[]{"A","B","C"});
+
+        locationRepository.save( new UserLocation(user.getId(), 30f, 342f));
+
+        userRepository.save( user );
+
+        System.out.println();
+
+        userService.removeUser( user );
+
+        System.out.println();
+
+
+
     }
 
 

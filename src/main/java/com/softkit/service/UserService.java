@@ -34,7 +34,7 @@ public class UserService implements UserFieldsSetter {
         technologiesService.removeAllTechnologies(user);
         referralService.removeAllUserReferrals(user);
         specializationService.removeAllUserSpecialisations(user);
-        locationRepository.deleteById( user.getId() );
+        locationRepository.deleteByUserId( user.getId() );
         userRepository.deleteById(user.getId());
     }
 

@@ -18,7 +18,7 @@ public class UserLocation {
     @Column( unique = true )
     @Setter( value = AccessLevel.NONE )
     @EqualsAndHashCode.Include
-    private Integer telegramId;
+    private Integer userId;
 
     @NotNull
     private Float longitude;
@@ -30,8 +30,8 @@ public class UserLocation {
     @Getter
     private Date dateCreated;
 
-    public UserLocation(Integer telegramId, Float longitude, Float latitude) {
-        this.telegramId = telegramId;
+    public UserLocation(Integer userId, Float longitude, Float latitude) {
+        this.userId = userId;
         this.longitude = longitude;
         this.latitude = latitude;
     }
