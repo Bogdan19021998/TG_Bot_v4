@@ -32,7 +32,7 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
         Integer userId = UpdateUtils.getUserId(update);
 
         if (userId != null)
-            if (UpdateUtils.getMessageOrCallbackMessage(update).text() != null || UpdateUtils.isCallback(update)) {
+            if (UpdateUtils.getMessageOrCallbackMessage(update) != null || UpdateUtils.isCallback(update)) {
                 Optional<User> user = userRepository.findUserById(userId);
 
                 AbstractStep step = user.map(u -> stepHolder.getStep(u.getStep())).orElseGet(stepHolder::getStartStep);
@@ -57,7 +57,7 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
                 }
 
                 if (baseRequest != null) {
-                    isSent = messageSender.send(result.getRequest());
+                    isSent = messageSender.send(baseRequest);
                     if (isSent)
                         userRepository.save(result.getUpdatedUser());
                 }

@@ -2,9 +2,15 @@ package com.softkit.steps;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.KeyboardButton;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
+import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.softkit.Bot;
 import com.softkit.database.User;
+import com.softkit.database.UserLocation;
+import com.softkit.repository.LocationRepository;
 import com.softkit.repository.UserFieldsSetter;
 import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.*;
@@ -17,10 +23,11 @@ import java.util.stream.Stream;
 @Component
 public class LocationStep extends AbstractStep {
 
-
+    private final LocationRepository locationRepository;
     private final UserFieldsSetter userFieldsSetter;
 
-    public LocationStep(UserFieldsSetter userFieldsSetter) {
+    public LocationStep(LocationRepository locationRepository, UserFieldsSetter userFieldsSetter) {
+        this.locationRepository = locationRepository;
         this.userFieldsSetter = userFieldsSetter;
     }
 
@@ -30,18 +37,28 @@ public class LocationStep extends AbstractStep {
         Step nextStep = getCurrentStepId();
         String outgoingMessage;
 
+        BaseRequest<?,?> baseRequest = null;
         BaseRequest<?,?> optional = null;
 
         if (UpdateUtils.isCallback(update) && City.hasEnumWithName(update.callbackQuery().data())) {
+
             userFieldsSetter.setCity(user, City.valueOf(update.callbackQuery().data()));
-            nextStep = Step.EMPLOYMENT;
             optional = UpdateUtils.getSelectedItemBaseRequest(chatId, update.callbackQuery());
+            nextStep = Step.EMPLOYMENT;
             outgoingMessage = nextStep.getBotMessage();
-        } else {
-            outgoingMessage = nextStep.getUserMistakeResponse();
+            baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
+
+        } else if (UpdateUtils.isMessage(update) && update.message().location() != null) {
+
+            locationRepository.save(new UserLocation(user.getId(),
+                    update.message().location().longitude(), update.message().location().latitude()));
+            nextStep = Step.EMPLOYMENT;
+            outgoingMessage = nextStep.getBotMessage();
+            baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
+
         }
 
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user, optional);
+        return new UpdateProcessorResult(chatId, baseRequest, nextStep, user, optional);
     }
 
     @Override
@@ -58,9 +75,13 @@ public class LocationStep extends AbstractStep {
         List<String> callbacks = new ArrayList<>();
         Stream.of(City.values()).forEach(experience -> callbacks.add(experience.name()));
 
-        return ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(
-                new InlineKeyboardMarkup(UpdateUtils.getButtonArray(cities, callbacks, 1, false))
-        );
+        //
+        InlineKeyboardMarkup citiesMarkup = new InlineKeyboardMarkup(UpdateUtils.getButtonArray(cities, callbacks, 1, false));
+        BaseRequest<?,?> optionalRequest = ((SendMessage)updateProcessorResult.getRequest()).replyMarkup(citiesMarkup);
+        ApplicationContextProvider.getApplicationContext().getBean(Bot.class).execute(optionalRequest);
+        //
+        KeyboardButton[] buttons = new KeyboardButton[] {new KeyboardButton("Поделится Местоположением").requestLocation(true)};
+        return new SendMessage(updateProcessorResult.getChatId(), "Ты также можешь отправить свое местоположение").
+                replyMarkup(new ReplyKeyboardMarkup(buttons).resizeKeyboard(true));
     }
-
 }
