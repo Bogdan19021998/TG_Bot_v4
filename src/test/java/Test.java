@@ -4,6 +4,7 @@ import com.softkit.database.UserSpecialization;
 import com.softkit.repository.UserRepository;
 import com.softkit.repository.UserSpecialisationsRepository;
 import com.softkit.service.EmploymentsService;
+import com.softkit.service.ReferralService;
 import com.softkit.service.RefferalService;
 import com.softkit.service.SpecializationService;
 import com.softkit.service.TechnologiesService;
@@ -30,13 +31,13 @@ public class Test {
     public void test() {
         userRepository.deleteAll();
 
-        checkSpecializations();
+//        checkSpecializations();
 
         checkEmployment();
 
-        checkTechnologies();
+//        checkTechnologies();
 
-        checkReferrals();
+//        checkReferrals();
     }
 
 
@@ -46,7 +47,7 @@ public class Test {
 
         ApplicationContext ctx = ApplicationContextProvider.getApplicationContext();
 
-        RefferalService service = ctx.getBean(RefferalService.class);
+        ReferralService service = ctx.getBean(ReferralService.class);
 
         Integer sizeEmpty = service.findAllUserReferrals(user).size();
 

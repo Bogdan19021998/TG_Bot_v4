@@ -4,26 +4,20 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.sql.Date;
-import java.sql.Timestamp;
 
-@Entity
-@Data
+@MappedSuperclass
 @NoArgsConstructor
-@AllArgsConstructor
-@NotNull
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserLocation {
+public class AbstractEntity {
 
     @Id
     @Column( unique = true )
     @Setter( value = AccessLevel.NONE )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @EqualsAndHashCode.Include
-    private Integer telegramId;
+    private Integer id;
 
-    private Float longitude;
-    private Float latitude;
+    private Integer userId;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)

@@ -11,23 +11,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @NotNull
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserEmployment {
-
-    @Id
-    @Column( unique = true )
-    @Setter( value = AccessLevel.NONE )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @EqualsAndHashCode.Include
-    private Integer id;
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+public class UserEmployment extends AbstractEntity{
 
     private Integer userId;
 
     @Enumerated(EnumType.ORDINAL)
     private Employment employment;
-
-    public UserEmployment(Integer userId, Employment employment) {
-        this.userId = userId;
-        this.employment = employment;
-    }
 }

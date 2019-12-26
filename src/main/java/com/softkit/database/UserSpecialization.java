@@ -11,23 +11,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @NotNull
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class UserSpecialization {
-
-    @Id
-    @Column( unique = true )
-    @Setter( value = AccessLevel.NONE )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @EqualsAndHashCode.Include
-    private Integer id;
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
+public class UserSpecialization extends AbstractEntity {
 
     @Enumerated(EnumType.ORDINAL)
     private Specialization specialization;
-
-    private Integer userId;
-
-    public UserSpecialization(Integer userId, Specialization specialization) {
-        this.userId = userId;
-        this.specialization = specialization;
-    }
 }

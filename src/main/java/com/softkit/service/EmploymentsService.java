@@ -16,15 +16,15 @@ public class EmploymentsService {
     private final UserEmploymentRepository userEmploymentRepository;
 
     public HashSet<UserEmployment> findAllUserEmployments(User user) {
-//        return new HashSet<UserSpecialization>(
-//                userSpecialisationsRepository.findUserSpecializationsByUserId(user.getId()));
-        return new HashSet<>();
+        return new HashSet<>( userEmploymentRepository.findUserEmploymentsByUserId( user.getId() ));
     }
 
     public void addUserEmployment(User user, Employment employment) {
+        userEmploymentRepository.save( new UserEmployment(user.getId(), employment ));
     }
 
     public void removeUserEmployment(User user, Employment employment) {
+        userEmploymentRepository.removeUserEmployment(user.getId(), employment);
     }
 
     public void removeAllUserEmployments(User user) {

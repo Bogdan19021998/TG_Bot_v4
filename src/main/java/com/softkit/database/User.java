@@ -5,14 +5,17 @@ import com.softkit.vo.EnglishLevel;
 import com.softkit.vo.Experience;
 import com.softkit.vo.Step;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name="user_table")
+@Table(name="\"user\"")
 @Data
 @NoArgsConstructor
 @NotNull
@@ -61,9 +64,17 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private City city;
 
-    private Timestamp registrationTimestamp;
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Setter(value = AccessLevel.NONE )
+    @Getter
+    private Date dateCreated;
 
-    private Timestamp dataEditTimestamp;
+    @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    @Setter(value = AccessLevel.NONE )
+    @Getter
+    private Date dateUpdated;
 
     public User(Integer telegramId ) {
         this.id = telegramId;
