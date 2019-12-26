@@ -9,18 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserFieldsSetter {
 
-    default void setCity(User user, City city){};
+    void setCity(User user, City city);
 
-    default void setLocation(User user, float longitude, float latitude){};
+    void setCandidate(User user, String text);
 
-    default void setCandidate(User user, String text) {};
+    void setEnglishLevel(User user, EnglishLevel englishLevel);
 
-    default void setEnglishLevel(User user, EnglishLevel englishName){};
+    void setExperience(User user, Experience experience);
 
-    default void setExperience(User user, Experience experience){};
-
-    default void setSalaryUpTo(User user, Integer price){};
+    void setSalaryUpTo(User user, Integer price);
     
-    default void setSalaryFrom(User user, Integer price){};
+    void setSalaryFrom(User user, Integer price);
 
 }
