@@ -2,6 +2,8 @@ package com.softkit.utils;
 
 import org.springframework.lang.NonNull;
 
+import java.util.Base64;
+
 public class TextParser {
 
     public static int wordCount(String text) {
@@ -11,6 +13,24 @@ public class TextParser {
 
     public static String fixSpacing(String text) {
         return text.replaceAll(" {2,}", " ");
+    }
+
+
+    public static String  encryptingText( String text )
+    {
+        return new String( Base64.getEncoder().encode( text.getBytes() ));
+    }
+
+    public static String decryptingText( String encryptingText )
+    {
+        return new String( Base64.getDecoder().decode( encryptingText ));
+    }
+
+    public static String createReferralLink( Integer userId ) {
+        // todo you must take name bot with other class.
+
+        String nameBot = "SK_assistent_bot";
+        return "https://telegram.me/" + nameBot + "/" + encryptingText( userId + "" );
     }
 
     public static boolean isLetterText(@NonNull String text) {
