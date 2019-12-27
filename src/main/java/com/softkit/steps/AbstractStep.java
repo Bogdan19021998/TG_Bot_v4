@@ -16,10 +16,9 @@ public abstract class AbstractStep {
 
     public abstract BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult);
 
-    /**
-     * getDefaultNextStep()
+    /*
+     * todo getDefaultNextStep()
      * При "пропустить" проверять в DefaultUpdateProcessor, вызывать этот метод с проверкой и переходить в следующий дефолтный
-     *
      */
 
 }
