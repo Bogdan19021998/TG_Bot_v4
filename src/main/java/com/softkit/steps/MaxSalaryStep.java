@@ -30,6 +30,10 @@ public class MaxSalaryStep extends AbstractStep {
             String price = UpdateUtils.getMessage(update).text();
             if (TextParser.isIntegerText(price) && Integer.parseInt(price) >= 10 && Integer.parseInt(price) <= 99999) {
                 userFieldsSetter.setSalaryUpTo(user, Integer.parseInt(price));
+
+                // create and add referral link
+                user.setReferralLink( TextParser.createReferralLink( user.getId() ));
+
                 nextStep = Step.DONE_BASIC_REGISTRATION;
                 outgoingMessage = nextStep.getBotMessage();
             }

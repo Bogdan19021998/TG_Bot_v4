@@ -40,7 +40,10 @@ public class User {
     @Column(length = 150)
     private String referralLink;
 
-    @Range(min = 15, max = 99)
+    @Column(length = 150)
+    private String nameSummary;
+
+    @Range(min = 18, max = 99)
     private Integer age;
 
     @Range (min = 10, max = 99999 )
