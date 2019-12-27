@@ -23,12 +23,14 @@ public class UserService implements UserFieldsSetter {
     private final SpecializationService specializationService;
     private final TechnologiesService technologiesService;
 
+
     public User addUserAndSetFirstStep(Integer telegramId) {
         User user = new User(telegramId);
         user.setStep(Step.START);
         return user;
     }
 
+    //todo must deleted referral in user Owner.
     public void removeUser(User user) {
         employmentsService.removeAllUserEmployments(user);
         technologiesService.removeAllTechnologies(user);
@@ -75,4 +77,15 @@ public class UserService implements UserFieldsSetter {
     public void setPhone(User user, String phoneNumber) {
         user.setPhone(phoneNumber);
     }
+
+    @Override
+    public void setNameSummary(User user, String nameSummary) {
+        user.setNameSummary( nameSummary );
+    }
+
+    @Override
+    public void setReferralLink(User user, String referralLink) {
+        user.setReferralLink( referralLink );
+    }
+
 }
