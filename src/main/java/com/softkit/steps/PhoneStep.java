@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
+import com.softkit.service.UserService;
 import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 public class PhoneStep extends AbstractStep{
 
     private final UserFieldsSetter userFieldsSetter;
+    private final UserService userService;
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
@@ -32,11 +34,21 @@ public class PhoneStep extends AbstractStep{
         if (UpdateUtils.isMessage(update)) {
             if (update.message().contact() != null) {
                 userFieldsSetter.setPhone(user, update.message().contact().phoneNumber());
+
                 nextStep = Step.AGE;
+
+//                nextStep = userService.getNextStepInProfile( user );
+
+
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             } else if (UpdateUtils.hasMassageText(update) && update.message().text().contentEquals("Пропустить")) {
+
                 nextStep = Step.AGE;
+
+//                nextStep = userService.getNextStepInProfile( user );
+
+
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             }

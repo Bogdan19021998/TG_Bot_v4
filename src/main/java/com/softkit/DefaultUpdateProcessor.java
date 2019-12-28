@@ -8,9 +8,12 @@ import com.softkit.database.User;
 import com.softkit.database.UserReferral;
 import com.softkit.repository.ReferralRepository;
 import com.softkit.repository.UserRepository;
+import com.softkit.service.UserService;
 import com.softkit.steps.AbstractStep;
+import com.softkit.steps.Commands;
 import com.softkit.steps.StepHolder;
 import com.softkit.vo.ApplicationContextProvider;
+import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.utils.UpdateUtils;
 import org.apache.commons.io.FileUtils;
@@ -29,13 +32,20 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
     private UserRepository userRepository;
     private StepHolder stepHolder;
     private IMessageSender messageSender;
-    private ReferralRepository referralRepository;
 
-    public DefaultUpdateProcessor(UserRepository userRepository, StepHolder stepHolder, @Qualifier("botMessageSender") IMessageSender messageSender, ReferralRepository referralRepository) {
+
+    private ReferralRepository referralRepository;
+    private UserService userService;
+    private Commands commands;
+
+    public DefaultUpdateProcessor(UserRepository userRepository, StepHolder stepHolder, @Qualifier("botMessageSender") IMessageSender messageSender, ReferralRepository referralRepository, Commands commands,  UserService userService) {
         this.userRepository = userRepository;
         this.stepHolder = stepHolder;
         this.messageSender = messageSender;
+
         this.referralRepository = referralRepository;
+        this.commands = commands;
+        this.userService = userService;
     }
 
     @Override
@@ -45,20 +55,28 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
 
         if (userId != null)
             if (UpdateUtils.getMessageOrCallbackMessage(update) != null || UpdateUtils.isCallback(update)) {
-                Optional<User> user = userRepository.findUserById(userId);
 
-                AbstractStep step = user.map(u -> stepHolder.getStep(u.getStep())).orElseGet(stepHolder::getStartStep);
+                Optional<User> optionalUser = userRepository.findUserById(userId);
+                AbstractStep step = commands;
 
-                System.out.println("update from user " + UpdateUtils.getUserId(update) + " with status " + step.getCurrentStepId());
 
-                UpdateProcessorResult result = step.process(update, user.orElse(new User(userId)));
+                User user = optionalUser.orElse( userService.addUserAndSetFirstStep(UpdateUtils.getUserId(update)));
+                UpdateProcessorResult result = commands.process( update, user );
+
+                if( result == null ) {
+
+                    step = stepHolder.getStep(user.getStep());
+                    result = step.process(update, user);
+
+                    System.out.println("update from user " + UpdateUtils.getUserId(update) + " with status " + step.getCurrentStepId());
+                }
 
                 // optional request
                 if (result.getOptionalRequest() != null) {
                     BaseResponse response = messageSender.send(result.getOptionalRequest());
                     if( response instanceof GetFileResponse )
                     {
-                        saveFile( (GetFileResponse)response, user.get() );
+                        saveFile( (GetFileResponse)response, user );
                     }
                 }
 

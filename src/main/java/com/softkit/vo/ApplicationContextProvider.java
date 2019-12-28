@@ -1,5 +1,8 @@
 package com.softkit.vo;
 
+import com.softkit.database.User;
+import com.softkit.repository.UserRepository;
+import com.softkit.service.UserService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

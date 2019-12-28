@@ -8,6 +8,7 @@ import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
+import com.softkit.service.UserService;
 import com.softkit.utils.TextParser;
 import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.Step;
@@ -20,6 +21,8 @@ import org.springframework.stereotype.Component;
 public class AgeStep extends AbstractStep {
 
     private final UserFieldsSetter userFieldsSetter;
+
+    private final UserService userService;
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
@@ -35,13 +38,23 @@ public class AgeStep extends AbstractStep {
             if (TextParser.isIntegerText(userText)) {
                 int age = Integer.parseInt(userText);
                 if (age >= 18 && age <= 99) {
+
                     nextStep = Step.SUMMARY;
+
+//                    nextStep = userService.getNextStepInProfile( user  );
+
+
                     userFieldsSetter.setAge(user, age);
                     outgoingMessage = nextStep.getBotMessage();
                     baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
                 }
             } else if (userText.contentEquals("Пропустить")) {
+
                 nextStep = Step.SUMMARY;
+
+//                nextStep = userService.getNextStepInProfile( user );
+
+
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             }

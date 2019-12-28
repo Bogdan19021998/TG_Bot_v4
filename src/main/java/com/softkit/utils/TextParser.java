@@ -30,7 +30,7 @@ public class TextParser {
         // todo you must take name bot with other class.
 
         String nameBot = "SK_assistent_bot";
-        return "https://telegram.me/" + nameBot + "/" + encryptingText( userId + "" );
+        return "https://telegram.me/" + nameBot + "/?start=" + encryptingText( userId + "" );
     }
 
     public static boolean isLetterText(@NonNull String text) {

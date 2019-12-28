@@ -7,6 +7,8 @@ import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
 import org.springframework.stereotype.Component;
 
+import java.net.MalformedURLException;
+
 @Component
 public abstract class AbstractStep {
 

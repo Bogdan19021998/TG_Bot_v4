@@ -41,7 +41,7 @@ public class SummaryStep extends AbstractStep {
                 String nameSummary = user.getId() + "_" + document.fileName();
                 user.setNameSummary( nameSummary );
 
-                // save file !
+                // save file
                 nextStep = Step.DONE_REGISTRATION;
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));

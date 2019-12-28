@@ -4,6 +4,7 @@ import com.softkit.database.User;
 import com.softkit.vo.City;
 import com.softkit.vo.EnglishLevel;
 import com.softkit.vo.Experience;
+import com.softkit.vo.Step;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,4 +29,10 @@ public interface UserFieldsSetter {
     void setNameSummary( User user, String nameSummary );
 
     void setReferralLink ( User user, String referralLink );
+
+    /*
+    Step getNotFilledStepInProfile( User user );
+
+    Step getNextStepInProfile( User user );
+     */
 }

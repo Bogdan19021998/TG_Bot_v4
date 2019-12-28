@@ -72,7 +72,6 @@ public class UpdateUtils {
         return null;
     }
 
-
     // button array
     @SuppressWarnings("unused")
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings) {

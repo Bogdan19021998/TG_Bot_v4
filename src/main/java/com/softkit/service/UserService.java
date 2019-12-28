@@ -36,41 +36,43 @@ public class UserService implements UserFieldsSetter {
         technologiesService.removeAllTechnologies(user);
         referralService.removeAllUserReferrals(user);
         specializationService.removeAllUserSpecialisations(user);
-        locationRepository.deleteByUserId( user.getId() );
+        locationRepository.deleteByUserId(user.getId());
         userRepository.deleteById(user.getId());
     }
 
     @Override
     public void setCity(User user, City city) {
-        user.setCity( city );
+        user.setCity(city);
     }
 
     @Override
     public void setCandidate(User user, String text) {
-        user.setName( text );
+        user.setName(text);
     }
 
     @Override
     public void setEnglishLevel(User user, EnglishLevel englishLevel) {
-        user.setEnglishLevel( englishLevel );
+        user.setEnglishLevel(englishLevel);
     }
 
     @Override
     public void setExperience(User user, Experience experience) {
-        user.setExperience( experience );
+        user.setExperience(experience);
     }
 
     @Override
-    public void setAge(User user, Integer age) { user.setAge( age ); }
+    public void setAge(User user, Integer age) {
+        user.setAge(age);
+    }
 
     @Override
     public void setSalaryUpTo(User user, Integer price) {
-        user.setSalaryUpTo( price );
+        user.setSalaryUpTo(price);
     }
 
     @Override
     public void setSalaryFrom(User user, Integer price) {
-        user.setSalaryFrom( price );
+        user.setSalaryFrom(price);
     }
 
     @Override
@@ -80,12 +82,44 @@ public class UserService implements UserFieldsSetter {
 
     @Override
     public void setNameSummary(User user, String nameSummary) {
-        user.setNameSummary( nameSummary );
+        user.setNameSummary(nameSummary);
     }
 
     @Override
     public void setReferralLink(User user, String referralLink) {
-        user.setReferralLink( referralLink );
+        user.setReferralLink(referralLink);
     }
 
+
+    /*
+    @Override
+    public Step getNotFilledStepInProfile( User user ) {
+        if (user.getPhone() == null)
+            return Step.PHONE;
+        if (user.getAge() == null)
+            return Step.AGE;
+        if (user.getNameSummary() == null)
+            return Step.SUMMARY;
+
+        return Step.DONE_REGISTRATION;
+    }
+
+    @Override
+    public Step getNextStepInProfile( User user ) {
+        Step currentStep = user.getStep();
+        if (user.getPhone() == null) {
+            if (currentStep.ordinal() < Step.PHONE.ordinal())
+                return Step.PHONE;
+        }
+        if (user.getAge() == null) {
+            if (currentStep.ordinal() < Step.AGE.ordinal())
+                return Step.AGE;
+        }
+        if (user.getNameSummary() == null) {
+            if (currentStep.ordinal() < Step.SUMMARY.ordinal())
+                return Step.SUMMARY;
+        }
+        return null;
+    }
+     */
 }

@@ -1,5 +1,9 @@
+import com.pengrad.telegrambot.model.CallbackQuery;
+import com.pengrad.telegrambot.model.Document;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.KeyboardButton;
+import com.pengrad.telegrambot.request.SendMessage;
+import com.softkit.Bot;
 import com.softkit.TgBotApplication;
 import com.softkit.database.*;
 import com.softkit.repository.LocationRepository;
@@ -13,6 +17,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.print.Doc;
+import java.net.URL;
 import java.util.Date;
 
 @RunWith(SpringRunner.class)
@@ -57,7 +63,17 @@ public class Test {
 
 //        checkReferrals();
 
-        checkUser();
+//        checkUser();
+
+        checkDownloadingFile();
+    }
+
+    private void checkDownloadingFile() {
+        Bot bot = ApplicationContextProvider.getApplicationContext().getBean( Bot.class );
+        String basicStr = "https://telegram.me/SK_Salo_bot?start=9999999";
+
+
+
     }
 
     private void checkUser() {

@@ -33,8 +33,9 @@ public class StartStep extends AbstractStep {
             String incomingText = UpdateUtils.getMessage(update).text();
             if( incomingText.indexOf( StepHolder.getStartCommand() ) == 0 )
             {
-                nextStep = Step.SUMMARY;
+                nextStep = Step.CANDIDATE;
                 outgoingMessage = nextStep.getBotMessage();
+
                 if( TextParser.wordCount( incomingText ) == 2 ) {
                     String strEncryptingReferralId = incomingText.trim().split(" ")[1];
 
