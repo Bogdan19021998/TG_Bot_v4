@@ -18,8 +18,8 @@ public class ReferralService {
         return new HashSet<>(referralRepository.findUserReferralsByUserId(user.getId()));
     }
 
-    public void addUserReferral(User user, Integer referralId) {
-        referralRepository.save( new UserReferral(user.getId(), referralId));
+    public void addUserReferral(User userOwner, User userChild) {
+        referralRepository.save( new UserReferral(userOwner.getId(), userChild.getId() ));
     }
 
     public void removeAllUserReferrals(User user) {

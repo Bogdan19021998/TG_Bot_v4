@@ -4,7 +4,9 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
+import com.softkit.repository.ReferralRepository;
 import com.softkit.repository.UserRepository;
+import com.softkit.service.ReferralService;
 import com.softkit.utils.TextParser;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
@@ -19,6 +21,7 @@ import java.util.Base64;
 public class StartStep extends AbstractStep {
 
     private final UserRepository userRepository;
+    private final ReferralService referralService;
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
@@ -42,8 +45,9 @@ public class StartStep extends AbstractStep {
                     String strUserId = TextParser.decryptingText(strEncryptingReferralId);
                     if ( TextParser.isIntegerText( strUserId ) )
                     {
-                        Integer userId = Integer.valueOf( strUserId );
-                        userOwner = userRepository.findUserById( userId ).orElse(null);
+                        userOwner = userRepository.findUserById( Integer.valueOf( strUserId ) ).orElse(null);
+                        if( userOwner != null )
+                            referralService.addUserReferral( userOwner, user );
                     }
                 }
             }
@@ -52,9 +56,7 @@ public class StartStep extends AbstractStep {
             outgoingMessage = nextStep.getUserMistakeResponse();
 
         UpdateProcessorResult updateProcessorResult = new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-        if( userOwner != null ) {
-            updateProcessorResult.setUserOwner( userOwner );
-        }
+
 
         return updateProcessorResult;
 

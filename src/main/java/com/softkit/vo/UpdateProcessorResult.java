@@ -8,9 +8,9 @@ import org.springframework.lang.Nullable;
 import javax.validation.constraints.NotNull;
 
 @Data
-//@Builder
+@Builder
 @NoArgsConstructor
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class UpdateProcessorResult {
     @Nullable
     private Long chatId;
@@ -22,7 +22,6 @@ public class UpdateProcessorResult {
 
     private User updatedUser;
 
-    private User userOwner;
 
     private BaseRequest<?, ?> optionalRequest;
 
@@ -31,13 +30,5 @@ public class UpdateProcessorResult {
         this.request = request;
         this.nextStep = nextStep;
         this.updatedUser = updatedUser;
-    }
-
-    public UpdateProcessorResult(@Nullable Long chatId, @NotNull BaseRequest<?, ?> request, Step nextStep, User updatedUser,  BaseRequest<?, ?> optionalRequest) {
-        this.chatId = chatId;
-        this.request = request;
-        this.nextStep = nextStep;
-        this.updatedUser = updatedUser;
-        this.optionalRequest = optionalRequest;
     }
 }

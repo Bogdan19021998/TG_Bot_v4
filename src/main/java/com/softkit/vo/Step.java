@@ -109,10 +109,12 @@ public enum Step {
                     "составляет $N. Ты можешь пригласить больше друзей отправив им вот эту ссылку ",
             ""
     ),
-    COMMANDS(
-            "Separator for commands : /start, /profile, /invites",
+    REFERRAL_LINK(
+            "For send referral link",
             "",
-            "");
+            ""
+    );
+
     @Getter
     private final String stepDescription;
 
