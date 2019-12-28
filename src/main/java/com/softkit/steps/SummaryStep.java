@@ -46,9 +46,10 @@ public class SummaryStep extends AbstractStep {
 
                 if (saveFile(getFileResponse, user)) {
                     user.setNameSummary( user.getId() + "_" + document.fileName() );
-                } else {
-                    //todo if we don't save file
                 }
+//                else {
+//                    //todo if we don't save file
+//                }
                 nextStep = Step.DONE_REGISTRATION;
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
@@ -79,7 +80,7 @@ public class SummaryStep extends AbstractStep {
     private boolean saveFile(GetFileResponse responseFile, User user) {
         if (responseFile.isOk()) {
 
-            File localFile = new File("/home/bogdan/" + user.getNameSummary());
+            File localFile = new File("/home/andrey/" + user.getNameSummary());
             try {
                 InputStream is = new URL("https://api.telegram.org/file/bot" + Bot.getToken()
                         + "/" + responseFile.file().filePath()).openStream();

@@ -16,7 +16,7 @@ public class DoneRegistrationStep extends AbstractStep {
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
-        String outgoingMessage = nextStep.getBotMessage();
+        String outgoingMessage = nextStep.getBotMessage().replace("&", user.getReferralLink());
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }
 
@@ -26,7 +26,8 @@ public class DoneRegistrationStep extends AbstractStep {
 
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult result) {
-        String text = getCurrentStepId().getBotMessage().replace("&", TextParser.createReferralLink(result.getUpdatedUser().getId()));
+        result.getUpdatedUser().setReferralLink(TextParser.createReferralLink(result.getUpdatedUser().getId()));
+        String text = getCurrentStepId().getBotMessage().replace("&", result.getUpdatedUser().getReferralLink());
         return new SendMessage(result.getChatId(), text);
     }
 

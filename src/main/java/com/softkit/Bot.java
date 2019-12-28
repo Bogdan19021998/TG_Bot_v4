@@ -3,6 +3,7 @@ package com.softkit;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.request.GetUpdates;
+import lombok.Getter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,8 @@ public class Bot extends TelegramBot {
     private GetUpdates getUpdates;
     private DefaultUpdateProcessor updateProcessor;
 
-    private static String token = "1032578818:AAEcsGFQ46oLcenajdG7vUB_jPyuazzdqIk";
+    @Getter
+    private static final String token = "1032578818:AAEcsGFQ46oLcenajdG7vUB_jPyuazzdqIk";
 
 
     private Bot(DefaultUpdateProcessor updateProcessor) {

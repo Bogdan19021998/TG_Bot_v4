@@ -21,12 +21,8 @@ public class Commands {
                 return Step.START;
             } else if (userText.contentEquals("/profile") && user.getStep().ordinal() >= Step.DONE_BASIC_REGISTRATION.ordinal()) {
                 return Step.DONE_BASIC_REGISTRATION;
-            } else if (user.getStep().ordinal() >= Step.DONE_BASIC_REGISTRATION.ordinal()) {
-
-                if (userText.contentEquals("/invites"))
-                    return Step.DONE_REGISTRATION;
-                else if (userText.contentEquals("/myreferrallink"))
-                    return Step.REFERRAL_LINK;
+            } else if (userText.contentEquals("/invites") && user.getStep().ordinal() >= Step.DONE_REGISTRATION.ordinal()) {
+                return Step.INVITED_USERS;
             }
         }
         return null;
