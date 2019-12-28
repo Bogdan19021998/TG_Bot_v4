@@ -29,6 +29,7 @@ public class StepHolder {
     private final AgeStep ageStep;                                     // 12
     private final SummaryStep summaryStep;                             // 13
     private final DoneRegistrationStep doneRegistrationStep;           // 14
+    private final InvitesStep invitesStep;                             // 15
 
     public static final String FINISH_SELECTION = "com.softkit.FINISH_SELECTION";
     private static final String START_COMMAND = "/start";
@@ -51,6 +52,7 @@ public class StepHolder {
         ALL_STEPS.put(AGE, ageStep);
         ALL_STEPS.put(SUMMARY, summaryStep);
         ALL_STEPS.put(DONE_REGISTRATION, doneRegistrationStep);
+        ALL_STEPS.put(INVITED_USERS, invitesStep);
     }
 
     public AbstractStep getStep(Step step) {
