@@ -36,19 +36,11 @@ public class PhoneStep extends AbstractStep{
                 userFieldsSetter.setPhone(user, update.message().contact().phoneNumber());
 
                 nextStep = Step.AGE;
-
-//                nextStep = userService.getNextStepInProfile( user );
-
-
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             } else if (UpdateUtils.hasMassageText(update) && update.message().text().contentEquals("Пропустить")) {
 
                 nextStep = Step.AGE;
-
-//                nextStep = userService.getNextStepInProfile( user );
-
-
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             }

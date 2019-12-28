@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
-import com.softkit.repository.ReferralRepository;
 import com.softkit.repository.UserRepository;
 import com.softkit.service.ReferralService;
 import com.softkit.utils.TextParser;
@@ -13,8 +12,6 @@ import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.utils.UpdateUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import java.util.Base64;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +27,6 @@ public class StartStep extends AbstractStep {
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
         String outgoingMessage = null;
-        User userOwner = null;
 
         if (UpdateUtils.hasMassageText(update) ) {
             String incomingText = UpdateUtils.getMessage(update).text();
@@ -45,9 +41,8 @@ public class StartStep extends AbstractStep {
                     String strUserId = TextParser.decryptingText(strEncryptingReferralId);
                     if ( TextParser.isIntegerText( strUserId ) )
                     {
-                        userOwner = userRepository.findUserById( Integer.valueOf( strUserId ) ).orElse(null);
-                        if( userOwner != null )
-                            referralService.addUserReferral( userOwner, user );
+                        userRepository.findUserById(Integer.valueOf(strUserId)).
+                                ifPresent(userOwner -> referralService.addUserReferral(userOwner, user));
                     }
                 }
             }
@@ -55,10 +50,7 @@ public class StartStep extends AbstractStep {
         if( outgoingMessage == null )
             outgoingMessage = nextStep.getUserMistakeResponse();
 
-        UpdateProcessorResult updateProcessorResult = new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-
-
-        return updateProcessorResult;
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
 
 
         // ---- First version

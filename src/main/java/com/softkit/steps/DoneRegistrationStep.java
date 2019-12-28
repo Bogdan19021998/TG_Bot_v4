@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
+import com.softkit.utils.TextParser;
 import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
@@ -25,7 +26,8 @@ public class DoneRegistrationStep extends AbstractStep {
 
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult result) {
-        return result.getRequest();
+        String text = getCurrentStepId().getBotMessage().replace("&", TextParser.createReferralLink(result.getUpdatedUser().getId()));
+        return new SendMessage(result.getChatId(), text);
     }
 
 }

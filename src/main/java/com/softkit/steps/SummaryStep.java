@@ -8,20 +8,11 @@ import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove;
 import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.GetFile;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.pengrad.telegrambot.response.GetFileResponse;
-import com.softkit.Bot;
 import com.softkit.database.User;
 import com.softkit.utils.UpdateUtils;
-import com.softkit.vo.ApplicationContextProvider;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
-import org.apache.commons.io.FileUtils;
-import org.hibernate.engine.jdbc.ReaderInputStream;
 import org.springframework.stereotype.Component;
-
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 @Component
 public class SummaryStep extends AbstractStep {

@@ -16,13 +16,11 @@ public class TextParser {
     }
 
 
-    public static String  encryptingText( String text )
-    {
+    public static String  encryptingText( String text ) {
         return new String( Base64.getEncoder().encode( text.getBytes() ));
     }
 
-    public static String decryptingText( String encryptingText )
-    {
+    public static String decryptingText( String encryptingText ) {
         return new String( Base64.getDecoder().decode( encryptingText ));
     }
 
