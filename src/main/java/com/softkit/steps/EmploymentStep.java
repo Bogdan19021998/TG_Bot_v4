@@ -29,6 +29,8 @@ public class EmploymentStep extends AbstractStep {
 
     @Override
     public UpdateProcessorResult process(Update update, User user) {
+
+
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
 

@@ -9,7 +9,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
 import com.softkit.service.UserService;
-import com.softkit.utils.TextParser;
 import com.softkit.utils.UpdateUtils;
 import com.softkit.vo.Step;
 import com.softkit.vo.UpdateProcessorResult;
@@ -27,6 +26,30 @@ public class AgeStep extends AbstractStep {
     @Override
     public UpdateProcessorResult process(Update update, User user) {
 
+        // version two
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
+
+        String outgoingMessage = nextStep.getUserMistakeResponse();
+        BaseRequest<?,?> baseRequest = new SendMessage(chatId, outgoingMessage);
+
+        if( UpdateUtils.isContainsIncomingMessage( update, "Пропустить") ) {
+            nextStep = Step.SUMMARY;
+            outgoingMessage = nextStep.getBotMessage();
+            baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
+        } else {
+            Integer number = UpdateUtils.getNumberForRange( update, 1,99 );
+            if( number != null ) {
+                nextStep = Step.SUMMARY;
+                userFieldsSetter.setAge(user, number);
+                outgoingMessage = nextStep.getBotMessage();
+                baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
+            }
+        }
+        return new UpdateProcessorResult(chatId, baseRequest, nextStep, user);
+
+        // version one
+        /*
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
 
@@ -41,9 +64,6 @@ public class AgeStep extends AbstractStep {
 
                     nextStep = Step.SUMMARY;
 
-//                    nextStep = userService.getNextStepInProfile( user  );
-
-
                     userFieldsSetter.setAge(user, age);
                     outgoingMessage = nextStep.getBotMessage();
                     baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
@@ -52,14 +72,12 @@ public class AgeStep extends AbstractStep {
 
                 nextStep = Step.SUMMARY;
 
-//                nextStep = userService.getNextStepInProfile( user );
-
-
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             }
         }
         return new UpdateProcessorResult(chatId, baseRequest, nextStep, user);
+         */
     }
 
     @Override

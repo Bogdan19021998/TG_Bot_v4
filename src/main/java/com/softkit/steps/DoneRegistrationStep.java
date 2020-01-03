@@ -16,6 +16,9 @@ public class DoneRegistrationStep extends AbstractStep {
     public UpdateProcessorResult process(Update update, User user) {
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
+
+        user.setReferralLink( TextParser.createReferralLink( user.getId() ));
+
         String outgoingMessage = nextStep.getBotMessage().replace("&", user.getReferralLink());
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
     }

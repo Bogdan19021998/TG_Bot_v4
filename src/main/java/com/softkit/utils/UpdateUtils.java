@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.softkit.steps.StepHolder.FINISH_SELECTION;
+import static com.softkit.utils.TextParser.getWordOfTextByDelimiter;
 
 public class UpdateUtils {
 
@@ -86,6 +87,23 @@ public class UpdateUtils {
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, int columns, boolean exitButton) {
         return getButtonArray(strings, strings, columns, exitButton);
     }
+
+    public static String getTextDescriptionOfCallback( String callback ) {
+        return getWordOfTextByDelimiter( callback, "|", 1);
+    }
+
+    public static boolean isContainsCallback( Update update , String enumName ) {
+        if( isCallback( update ) ) {
+            String enumNameOfCallback = getWordOfTextByDelimiter(
+                    UpdateUtils.getMessage(update).text(), "|", 0);
+            if (enumName != null) {
+                return enumNameOfCallback.contentEquals(enumName);
+            }
+        }
+        return false;
+    }
+
+
 
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, List<String> callbacks, int columns, boolean exitButton) {
 
@@ -197,6 +215,29 @@ public class UpdateUtils {
                     callbackQuery.message().text());
             editMessageText.replyMarkup(inlineKeyboardMarkup);
             return editMessageText;
+        }
+        return null;
+    }
+
+    public static boolean isContainsIncomingMessage(Update update, String incomingMessage) {
+        return UpdateUtils.hasMassageText(update) && UpdateUtils.getMessage(update).text().contentEquals(incomingMessage);
+    }
+
+    public static Integer getNumberForRange(Update update, Integer from, Integer before) {
+        if (UpdateUtils.hasMassageText(update)) {
+            Integer number = getNumberWithUpdate(update);
+            if (number != null && number >= from && number <= before) {
+                return number;
+            }
+        }
+        return null;
+    }
+
+    public static Integer getNumberWithUpdate(Update update) {
+        String strNumber = UpdateUtils.getMessage(update).text();
+        if (TextParser.isIntegerText(strNumber)) {
+            Integer number = Integer.parseInt(strNumber);
+            return number;
         }
         return null;
     }

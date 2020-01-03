@@ -35,9 +35,6 @@ public class User {
     private String phone;
 
     @Column(length = 150)
-    private String resumeFileId;
-
-    @Column(length = 150)
     private String referralLink;
 
     @Column(length = 150)

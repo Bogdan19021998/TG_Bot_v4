@@ -38,7 +38,7 @@ public class PhoneStep extends AbstractStep{
                 nextStep = Step.AGE;
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
-            } else if (UpdateUtils.hasMassageText(update) && update.message().text().contentEquals("Пропустить")) {
+            } else if (UpdateUtils.isContainsIncomingMessage( update, "Пропустить")) {
 
                 nextStep = Step.AGE;
                 outgoingMessage = nextStep.getBotMessage();

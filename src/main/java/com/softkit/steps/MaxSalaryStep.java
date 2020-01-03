@@ -6,7 +6,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import com.softkit.database.User;
 import com.softkit.repository.UserFieldsSetter;
 import com.softkit.vo.Step;
-import com.softkit.utils.TextParser;
 import com.softkit.vo.UpdateProcessorResult;
 import com.softkit.utils.UpdateUtils;
 import org.springframework.stereotype.Component;
@@ -16,12 +15,28 @@ public class MaxSalaryStep extends AbstractStep {
 
     private final UserFieldsSetter userFieldsSetter;
 
+
     public MaxSalaryStep(UserFieldsSetter userFieldsSetter) {
         this.userFieldsSetter = userFieldsSetter;
     }
 
     public UpdateProcessorResult process(Update update, User user) {
+        // version two
 
+        Long chatId = UpdateUtils.getChatId(update);
+        Step nextStep = getCurrentStepId();
+        String outgoingMessage = nextStep.getUserMistakeResponse();
+
+        Integer number = UpdateUtils.getNumberForRange( update, 10, 9999 );
+        if( number!= null) {
+            userFieldsSetter.setSalaryUpTo( user, number );
+            nextStep = Step.DONE_BASIC_REGISTRATION;
+            outgoingMessage = nextStep.getBotMessage();
+        }
+
+        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
+        // version one
+        /*
         Long chatId = UpdateUtils.getChatId(update);
         Step nextStep = getCurrentStepId();
         String outgoingMessage = nextStep.getUserMistakeResponse();
@@ -31,15 +46,13 @@ public class MaxSalaryStep extends AbstractStep {
             if (TextParser.isIntegerText(price) && Integer.parseInt(price) >= 10 && Integer.parseInt(price) <= 99999) {
                 userFieldsSetter.setSalaryUpTo(user, Integer.parseInt(price));
 
-                // create and add referral link
-                user.setReferralLink( TextParser.createReferralLink( user.getId() ));
-
                 nextStep = Step.DONE_BASIC_REGISTRATION;
                 outgoingMessage = nextStep.getBotMessage();
             }
         }
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
+         */
     }
 
     public Step getCurrentStepId() {

@@ -1,10 +1,13 @@
 package com.softkit.utils;
 
+import com.softkit.Bot;
 import org.springframework.lang.NonNull;
 
+import java.util.ArrayList;
 import java.util.Base64;
 
 public class TextParser {
+
 
     public static int wordCount(String text) {
         text = fixSpacing(text);
@@ -25,10 +28,7 @@ public class TextParser {
     }
 
     public static String createReferralLink( Integer userId ) {
-        // todo you must take name bot with other class.
-
-        String nameBot = "SK_assistent_bot";
-        return "https://telegram.me/" + nameBot + "/?start=" + encryptingText( userId + "" );
+        return "https://telegram.me/" + Bot.getBotName() + "/?start=" + encryptingText( userId + "" );
     }
 
     public static boolean isLetterText(@NonNull String text) {
@@ -56,6 +56,31 @@ public class TextParser {
             }
         }
         return text.length() < 11 && Long.parseLong(text) <= Integer.MAX_VALUE;
+    }
+
+    /**
+     * Index >= 0 .
+     */
+    public static String getWordOfTextByDelimiter( String text, String delimiter , Integer index ) {
+        if( text != null ) {
+            String [] arrayWords = text.split( delimiter );
+            if( arrayWords.length > index ) {
+                return arrayWords[index];
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Result : First word is EnumName, last word is EnumDescription.
+     * Example string : SomeEnum|SomeDescriptionEnum
+     */
+    public static ArrayList<String> addDelimiterAndEnumName(String enumName, ArrayList <String> arrNames ) {
+        ArrayList <String> arrayCallbacks = new ArrayList<>( arrNames.size() );
+        for (int i = 0; i < arrNames.size() ; i++) {
+            arrayCallbacks.add( enumName + '|' + arrNames.get(i));
+        }
+        return arrayCallbacks;
     }
 
 }

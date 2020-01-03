@@ -59,13 +59,13 @@ public class Test {
 
 //        checkEmployment();
 
-//        checkTechnologies();
+        checkTechnologies();
 
 //        checkReferrals();
 
 //        checkUser();
 
-        checkDownloadingFile();
+//        checkDownloadingFile();
     }
 
     private void checkDownloadingFile() {
@@ -96,8 +96,8 @@ public class Test {
         specializationService.addUserSpecialisation(user, Specialization.GOLANG);
         specializationService.addUserSpecialisation(user, Specialization.IOS);
 
-        referralService.addUserReferral(user,444);
-        referralService.addUserReferral(user,2323);
+//        referralService.addUserReferral(user,444);
+//        referralService.addUserReferral(user,2323);
 
         technologiesService.addAllTechnologies( user, new String[]{"A","B","C"});
 
@@ -129,9 +129,9 @@ public class Test {
         service.removeAllUserReferrals(user);
 
 
-        service.addUserReferral(user, 242342 );
-        service.addUserReferral(user, 10000001 );
-        service.addUserReferral(user, 99977999 );
+        service.addUserReferral(user, new User(44) );
+        service.addUserReferral(user, new User(55));
+        service.addUserReferral(user, new User(66) );
 
 
         System.out.println();
