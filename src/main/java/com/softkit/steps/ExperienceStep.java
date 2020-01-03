@@ -33,7 +33,7 @@ public class ExperienceStep extends AbstractStep {
 
         if (UpdateUtils.isCallback(update) && Experience.hasEnumWithName(update.callbackQuery().data())) {
             userFieldsSetter.setExperience(user, Experience.valueOf(update.callbackQuery().data()));
-            nextStep = Step.ENGLISH_LEVEL;
+            nextStep = getDefaultNextStep();
             optional = UpdateUtils.getSelectedItemBaseRequest(chatId, update.callbackQuery());
             outgoingMessage = nextStep.getBotMessage();
         } else {
@@ -46,6 +46,11 @@ public class ExperienceStep extends AbstractStep {
     @Override
     public Step getCurrentStepId() {
         return Step.EXPERIENCE;
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.ENGLISH_LEVEL;
     }
 
     @Override

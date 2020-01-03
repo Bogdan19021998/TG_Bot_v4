@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.softkit.steps.Commands.START_COMMAND;
 import static com.softkit.vo.Step.*;
 
 @Service
@@ -31,8 +32,6 @@ public class StepHolder {
     private final DoneRegistrationStep doneRegistrationStep;           // 14
     private final InvitesStep invitesStep;                             // 15
 
-    public static final String FINISH_SELECTION = "com.softkit.FINISH_SELECTION";
-    private static final String START_COMMAND = "/start";
     private static final Map<Step, AbstractStep> ALL_STEPS = new HashMap<>();
 
     @PostConstruct
@@ -61,9 +60,5 @@ public class StepHolder {
 
     public AbstractStep getStartStep() {
         return startStep;
-    }
-
-    public static String getStartCommand() {
-        return START_COMMAND;
     }
 }

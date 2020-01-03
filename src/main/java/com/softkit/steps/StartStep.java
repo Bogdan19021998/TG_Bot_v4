@@ -30,9 +30,9 @@ public class StartStep extends AbstractStep {
 
         if (UpdateUtils.hasMassageText(update) ) {
             String incomingText = UpdateUtils.getMessage(update).text();
-            if( incomingText.indexOf( StepHolder.getStartCommand() ) == 0 )
+            if( incomingText.indexOf( Commands.START_COMMAND ) == 0 )
             {
-                nextStep = Step.CANDIDATE;
+                nextStep = getDefaultNextStep();
                 outgoingMessage = nextStep.getBotMessage();
 
                 if( TextParser.wordCount( incomingText ) == 2 ) {
@@ -51,26 +51,6 @@ public class StartStep extends AbstractStep {
             outgoingMessage = nextStep.getUserMistakeResponse();
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-
-
-        // ---- First version
-
-        /*
-        Long chatId = UpdateUtils.getChatId(update);
-        Step nextStep = getCurrentStepId();
-        String outgoingMessage ;
-        if (UpdateUtils.hasMassageText(update) && UpdateUtils.getMessage(update).text().contentEquals(StepHolder.getStartCommand())) {
-            nextStep = Step.SUMMARY;
-//            nextStep = Step.CANDIDATE;
-
-            outgoingMessage = nextStep.getBotMessage();
-        } else
-            outgoingMessage = nextStep.getUserMistakeResponse();
-
-
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-        */
-
     }
 
     @Override
@@ -79,8 +59,14 @@ public class StartStep extends AbstractStep {
     }
 
     @Override
+    public Step getDefaultNextStep() {
+        return Step.CANDIDATE;
+    }
+
+    @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
         return updateProcessorResult.getRequest();
     }
+
 
 }

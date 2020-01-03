@@ -8,6 +8,7 @@ import java.util.Base64;
 
 public class TextParser {
 
+    public static final String FINISH_SELECTION = "Пропустить";
 
     public static int wordCount(String text) {
         text = fixSpacing(text);
@@ -77,8 +78,8 @@ public class TextParser {
      */
     public static ArrayList<String> addDelimiterAndEnumName(String enumName, ArrayList <String> arrNames ) {
         ArrayList <String> arrayCallbacks = new ArrayList<>( arrNames.size() );
-        for (int i = 0; i < arrNames.size() ; i++) {
-            arrayCallbacks.add( enumName + '|' + arrNames.get(i));
+        for (String arrName : arrNames) {
+            arrayCallbacks.add(enumName + '|' + arrName);
         }
         return arrayCallbacks;
     }

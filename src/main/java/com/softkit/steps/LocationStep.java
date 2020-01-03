@@ -5,8 +5,7 @@ import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.KeyboardButton;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.ReplyKeyboardRemove;
-import com.pengrad.telegrambot.request.BaseRequest;
-import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.*;
 import com.softkit.Bot;
 import com.softkit.database.User;
 import com.softkit.database.UserLocation;
@@ -44,7 +43,7 @@ public class LocationStep extends AbstractStep {
 
             userFieldsSetter.setCity(user, City.valueOf(update.callbackQuery().data()));
             optional = UpdateUtils.getSelectedItemBaseRequest(chatId, update.callbackQuery());
-            nextStep = Step.EMPLOYMENT;
+            nextStep = getDefaultNextStep();
             outgoingMessage = nextStep.getBotMessage();
             baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
 
@@ -52,10 +51,10 @@ public class LocationStep extends AbstractStep {
 
             locationRepository.save(new UserLocation(user.getId(),
                     update.message().location().longitude(), update.message().location().latitude()));
-            nextStep = Step.EMPLOYMENT;
+            nextStep = getDefaultNextStep();
             outgoingMessage = nextStep.getBotMessage();
-            baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
 
+            baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
         }
 
         return new UpdateProcessorResult(chatId, baseRequest, nextStep, user, optional);
@@ -64,6 +63,11 @@ public class LocationStep extends AbstractStep {
     @Override
     public Step getCurrentStepId() {
         return Step.CITY_OR_LOCATION;
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.EMPLOYMENT;
     }
 
     @Override

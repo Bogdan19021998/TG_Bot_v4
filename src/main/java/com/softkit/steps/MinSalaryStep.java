@@ -31,35 +31,21 @@ public class MinSalaryStep extends AbstractStep {
         Integer number = getNumberForRange( update, 10, 9999 );
         if( number!= null) {
             userFieldsSetter.setSalaryFrom(user, number);
-            nextStep = Step.MAX_SALARY;
+            nextStep = getDefaultNextStep();
             outgoingMessage = nextStep.getBotMessage();
         }
 
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-
-
-        // Version one
-        /*
-        Long chatId = UpdateUtils.getChatId(update);
-        Step nextStep = getCurrentStepId();
-        String outgoingMessage = nextStep.getUserMistakeResponse();
-
-        if (UpdateUtils.hasMassageText(update)) {
-            String price = UpdateUtils.getMessage(update).text();
-            if (TextParser.isIntegerText(price) && Integer.parseInt(price) >= 10 && Integer.parseInt(price) <= 99999) {
-                userFieldsSetter.setSalaryFrom(user, Integer.parseInt(price));
-                nextStep = Step.MAX_SALARY;
-                outgoingMessage = nextStep.getBotMessage();
-            }
-        }
-
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-    */
     }
 
 
     public Step getCurrentStepId() {
         return Step.MIN_SALARY;
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.MAX_SALARY;
     }
 
     @Override

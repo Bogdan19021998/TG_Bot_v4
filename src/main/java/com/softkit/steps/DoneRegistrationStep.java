@@ -34,4 +34,9 @@ public class DoneRegistrationStep extends AbstractStep {
         return new SendMessage(result.getChatId(), text);
     }
 
+    @Override
+    public Step getDefaultNextStep() {
+        return null;
+    }
+
 }

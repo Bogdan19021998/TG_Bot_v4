@@ -11,7 +11,7 @@ import com.pengrad.telegrambot.request.EditMessageText;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static com.softkit.steps.StepHolder.FINISH_SELECTION;
+import static com.softkit.utils.TextParser.FINISH_SELECTION;
 import static com.softkit.utils.TextParser.getWordOfTextByDelimiter;
 
 public class UpdateUtils {
@@ -108,7 +108,7 @@ public class UpdateUtils {
     public static InlineKeyboardButton[][] getButtonArray(List<String> strings, List<String> callbacks, int columns, boolean exitButton) {
 
         if (callbacks.size() != strings.size()) {
-            System.out.println("NOT EQUALS SISES!!!");
+            System.out.println("NOT EQUALS SIZES!!!");
             callbacks = strings;
         }
 

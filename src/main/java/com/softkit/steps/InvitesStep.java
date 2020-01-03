@@ -38,7 +38,14 @@ public class InvitesStep extends AbstractStep {
     }
 
     @Override
+    public Step getDefaultNextStep() {
+        return null;
+    }
+
+    @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
         return updateProcessorResult.getRequest();
     }
+
+
 }

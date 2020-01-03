@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.softkit.utils.TextParser.FINISH_SELECTION;
+
 @Component
 public class SpecialisationStep extends AbstractStep {
 
@@ -38,12 +40,12 @@ public class SpecialisationStep extends AbstractStep {
         if (UpdateUtils.isCallback(update)) {
             String data = update.callbackQuery().data();
 
-            if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
+            if (data.contentEquals(FINISH_SELECTION)) {
 
                 if (specializationService.findAllUserSpecialization(user).size() >= 1 &&
                         specializationService.findAllUserSpecialization(user).size() <= 5) {
 
-                    nextStep = Step.TECHNOLOGIES;
+                    nextStep = getDefaultNextStep();
 
                     outgoingMessage = nextStep.getBotMessage();
                     botAnswer = new SendMessage(chatId, outgoingMessage);
@@ -87,6 +89,11 @@ public class SpecialisationStep extends AbstractStep {
     @Override
     public Step getCurrentStepId() {
         return Step.SPECIALISATIONS;
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.TECHNOLOGIES;
     }
 
     @Override

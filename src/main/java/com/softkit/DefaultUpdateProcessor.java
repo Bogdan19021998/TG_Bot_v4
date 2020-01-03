@@ -59,22 +59,23 @@ public class DefaultUpdateProcessor implements UpdateProcessor {
                     messageSender.send(result.getOptionalRequest());
                 }
 
-                // main request
-                BaseRequest<?, ?> baseRequest;
-                boolean isSent;
-                if (result.getUpdatedUser().getStep() == result.getNextStep()) {
-                    baseRequest = result.getRequest();
-                } else {
-                    result.getUpdatedUser().setStep(result.getNextStep());
-                    baseRequest = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
-                }
+                if (result.getRequest() != null) {
+                    // main request
+                    BaseRequest<?, ?> baseRequest;
+                    boolean isSent;
+                    if (result.getUpdatedUser().getStep() == result.getNextStep()) {
+                        baseRequest = result.getRequest();
+                    } else {
+                        result.getUpdatedUser().setStep(result.getNextStep());
+                        baseRequest = stepHolder.getStep(result.getNextStep()).buildDefaultResponse(result);
+                    }
 
-                if (baseRequest != null) {
-                    isSent = messageSender.send(baseRequest).isOk();
-                    if (isSent)
-                        userRepository.save(result.getUpdatedUser());
+                    if (baseRequest != null) {
+                        isSent = messageSender.send(baseRequest).isOk();
+                        if (isSent)
+                            userRepository.save(result.getUpdatedUser());
+                    }
                 }
-
             }
 //        else {
 //                // some text about wrong user action

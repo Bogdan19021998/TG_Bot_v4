@@ -8,16 +8,21 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Commands {
+
+    public static final String START_COMMAND = "/start";
+    public static final String COMMAND_PROFILE = "/profile";
+    public static final String COMMAND_INVITES = "/invites";
+
     public Step getStepForUserCommand(Update update, User user) {
 
         if (UpdateUtils.hasMassageText(update)) {
             String userText = UpdateUtils.getMessage(update).text();
 
-            if (userText.contentEquals("/start")) {
+            if (userText.contentEquals(START_COMMAND)) {
                 return Step.START;
-            } else if (userText.contentEquals("/profile") && user.getStep().ordinal() >= Step.DONE_BASIC_REGISTRATION.ordinal()) {
+            } else if (userText.contentEquals(COMMAND_PROFILE) && user.getStep().ordinal() >= Step.DONE_BASIC_REGISTRATION.ordinal()) {
                 return Step.DONE_BASIC_REGISTRATION;
-            } else if (userText.contentEquals("/invites") && user.getStep().ordinal() >= Step.DONE_REGISTRATION.ordinal()) {
+            } else if (userText.contentEquals(COMMAND_INVITES) && user.getStep().ordinal() >= Step.DONE_REGISTRATION.ordinal()) {
                 return Step.INVITED_USERS;
             }
         }

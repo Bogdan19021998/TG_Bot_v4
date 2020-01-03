@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
+import static com.softkit.utils.TextParser.FINISH_SELECTION;
+
 @Component
 public class TechnologiesStep extends AbstractStep {
 
@@ -31,9 +33,9 @@ public class TechnologiesStep extends AbstractStep {
         String outgoingMessage;
         BaseRequest<?,?> optional = null;
 
-        if ( UpdateUtils.isCallback(update) && update.callbackQuery().data().contentEquals(StepHolder.FINISH_SELECTION) ) {
+        if ( UpdateUtils.isCallback(update) && update.callbackQuery().data().contentEquals(FINISH_SELECTION) ) {
             optional = new AnswerCallbackQuery(update.callbackQuery().id());
-            nextStep = Step.EXPERIENCE;
+            nextStep = getDefaultNextStep();
             outgoingMessage = nextStep.getBotMessage();
 
         } else if (UpdateUtils.hasMassageText(update) &&
@@ -42,7 +44,7 @@ public class TechnologiesStep extends AbstractStep {
             String[] technologiesStr = TextParser.fixSpacing( update.message().text() ).split(" ");
             technologiesService.addAllTechnologies(user, technologiesStr);
             // duplicated code ??
-            nextStep = Step.EXPERIENCE;
+            nextStep = getDefaultNextStep();
             outgoingMessage = nextStep.getBotMessage();
 
         } else {
@@ -55,6 +57,11 @@ public class TechnologiesStep extends AbstractStep {
     @Override
     public Step getCurrentStepId() {
         return Step.TECHNOLOGIES;
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.EXPERIENCE;
     }
 
     @Override

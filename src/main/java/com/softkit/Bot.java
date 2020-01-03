@@ -15,8 +15,8 @@ public class Bot extends TelegramBot {
     private DefaultUpdateProcessor updateProcessor;
 
     @Getter
-//    private static final String token = "1032578818:AAEcsGFQ46oLcenajdG7vUB_jPyuazzdqIk";
-    private static final String token = "1019131371:AAHzY-08YQGAAMzCcsXpQQ0TLdUN0ZwfWzw";
+    private static final String token = "1032578818:AAEcsGFQ46oLcenajdG7vUB_jPyuazzdqIk";
+   // private static final String token = "1019131371:AAHzY-08YQGAAMzCcsXpQQ0TLdUN0ZwfWzw";
 
     @Getter
     private static final String botName = "SK_assistent_bot";

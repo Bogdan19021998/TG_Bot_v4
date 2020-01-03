@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.softkit.utils.TextParser.FINISH_SELECTION;
+
 @Component
 public class EmploymentStep extends AbstractStep {
 
@@ -41,9 +43,9 @@ public class EmploymentStep extends AbstractStep {
         if (UpdateUtils.isCallback(update)) {
 
             String data = update.callbackQuery().data();
-            if (data.contentEquals(StepHolder.FINISH_SELECTION)) {
+            if (data.contentEquals(FINISH_SELECTION)) {
                 if (employmentsService.findAllUserEmployments(user).size() >= 1) {
-                    nextStep = Step.MIN_SALARY;
+                    nextStep = getDefaultNextStep();
                     outgoingMessage = nextStep.getBotMessage();
                     botAnswer = new SendMessage(chatId, outgoingMessage);
                     optional = new AnswerCallbackQuery(update.callbackQuery().id());
@@ -85,6 +87,11 @@ public class EmploymentStep extends AbstractStep {
     @Override
     public Step getCurrentStepId() {
         return Step.EMPLOYMENT;
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.MIN_SALARY;
     }
 
     @Override

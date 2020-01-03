@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import java.io.*;
 import java.net.URL;
 
+import static com.softkit.utils.TextParser.FINISH_SELECTION;
+
 @Component
 @RequiredArgsConstructor
 public class SummaryStep extends AbstractStep {
@@ -41,19 +43,19 @@ public class SummaryStep extends AbstractStep {
                 GetFileResponse getFileResponse = (GetFileResponse) botMessageSender.send(
                         new GetFile(document.fileId()));
 
-                user.setNameSummary( user.getId() + "_" + document.fileName() );
+                user.setNameSummary(user.getId() + "_" + document.fileName());
 
-                if ( !saveFile(getFileResponse, user) ) {
+                if (!saveFile(getFileResponse, user)) {
                     //todo if we don't save file
                 }
-                nextStep = Step.DONE_REGISTRATION;
+                nextStep = getDefaultNextStep();
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
 
                 return new UpdateProcessorResult(chatId, baseRequest, nextStep, user);
 
-            } else if (UpdateUtils.isContainsIncomingMessage(update, "Пропустить")) {
-                nextStep = Step.DONE_REGISTRATION;
+            } else if (UpdateUtils.isContainsIncomingMessage(update, FINISH_SELECTION)) {
+                nextStep = getDefaultNextStep();
                 outgoingMessage = nextStep.getBotMessage();
                 baseRequest = new SendMessage(chatId, outgoingMessage).replyMarkup(new ReplyKeyboardRemove(false));
             }
@@ -68,22 +70,33 @@ public class SummaryStep extends AbstractStep {
     }
 
     @Override
+    public Step getDefaultNextStep() {
+        return Step.DONE_REGISTRATION;
+    }
+
+    @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult result) {
-        KeyboardButton[] buttons = new KeyboardButton[]{new KeyboardButton("Пропустить")};
+        KeyboardButton[] buttons = new KeyboardButton[]{new KeyboardButton(FINISH_SELECTION)};
         return ((SendMessage) result.getRequest()).replyMarkup(new ReplyKeyboardMarkup(buttons).resizeKeyboard(true));
     }
 
     private boolean saveFile(GetFileResponse responseFile, User user) {
         if (responseFile.isOk()) {
 
-            File localFile = new File("/home/bogdan/" + user.getNameSummary());
-            try {
-                InputStream is = new URL("https://api.telegram.org/file/bot" + Bot.getToken()
-                        + "/" + responseFile.file().filePath()).openStream();
-                FileUtils.copyInputStreamToFile(is, localFile);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
+            String pathName = System.getProperty("user.home") + File.separator + "HRBot" +
+                    File.separator + "summaries";
+
+            File filePath = new File(pathName);
+            if (filePath.exists() || filePath.mkdirs()) {
+                try {
+                    File summaryFile = new File(pathName  + File.separator + user.getNameSummary());
+                    InputStream is = new URL("https://api.telegram.org/file/bot" + Bot.getToken()
+                            + "/" + responseFile.file().filePath()).openStream();
+                    FileUtils.copyInputStreamToFile(is, summaryFile);
+                    return true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         return false;

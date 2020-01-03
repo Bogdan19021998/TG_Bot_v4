@@ -33,7 +33,7 @@ public class EnglishLevelStep extends AbstractStep {
 
         if (UpdateUtils.isCallback(update) && EnglishLevel.hasEnumWithName(update.callbackQuery().data())) {
             userFieldsSetter.setEnglishLevel(user, EnglishLevel.valueOf(update.callbackQuery().data()));
-            nextStep = Step.CITY_OR_LOCATION;
+            nextStep = getDefaultNextStep();
             optional = UpdateUtils.getSelectedItemBaseRequest(chatId, update.callbackQuery());
             outgoingMessage = nextStep.getBotMessage();
         } else {
@@ -49,6 +49,11 @@ public class EnglishLevelStep extends AbstractStep {
     }
 
     @Override
+    public Step getDefaultNextStep() {
+        return Step.CITY_OR_LOCATION;
+    }
+
+    @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult updateProcessorResult) {
 
         List<String> englishLevels = new ArrayList<>();
@@ -61,5 +66,7 @@ public class EnglishLevelStep extends AbstractStep {
                 new InlineKeyboardMarkup(UpdateUtils.getButtonArray(englishLevels, callbacks, 1, false))
         );
     }
+
+
 
 }

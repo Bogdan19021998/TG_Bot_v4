@@ -34,7 +34,7 @@ public class CandidateStep extends AbstractStep {
 
             if ((userTextWords == 2 || userTextWords == 3) && TextParser.isLetterText(userText)) {
                 userFieldsSetter.setCandidate(user, TextParser.fixSpacing(userText));
-                nextStep = Step.SPECIALISATIONS;
+                nextStep = getDefaultNextStep();
                 outgoingMessage = nextStep.getBotMessage();
             } else
                 outgoingMessage = nextStep.getUserMistakeResponse();
@@ -52,6 +52,11 @@ public class CandidateStep extends AbstractStep {
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult result) {
         return result.getRequest();
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.SPECIALISATIONS;
     }
 
 }

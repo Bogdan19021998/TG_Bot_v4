@@ -20,25 +20,12 @@ public class DoneBasicRegistrationStep extends AbstractStep {
         Step nextStep = getCurrentStepId();
         String outgoingMessage = nextStep.getBotMessage();
 
-        if (UpdateUtils.isContainsIncomingMessage( update, "/profile")) {
-            nextStep = Step.PHONE;
+        if (UpdateUtils.isContainsIncomingMessage( update, Commands.COMMAND_PROFILE)) {
+            nextStep = getDefaultNextStep();
             outgoingMessage = nextStep.getBotMessage();
         }
         return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
 
-        // version one
-        /*
-        Long chatId = UpdateUtils.getChatId(update);
-        Step nextStep = getCurrentStepId();
-        String outgoingMessage = nextStep.getBotMessage();
-
-        if (UpdateUtils.hasMassageText(update) && update.message().text().contentEquals("/profile")) {
-            nextStep = Step.PHONE;
-            outgoingMessage = nextStep.getBotMessage();
-        }
-
-        return new UpdateProcessorResult(chatId, new SendMessage(chatId, outgoingMessage), nextStep, user);
-         */
     }
 
     public Step getCurrentStepId() {
@@ -48,6 +35,11 @@ public class DoneBasicRegistrationStep extends AbstractStep {
     @Override
     public BaseRequest<?, ?> buildDefaultResponse(UpdateProcessorResult result) {
         return result.getRequest();
+    }
+
+    @Override
+    public Step getDefaultNextStep() {
+        return Step.PHONE;
     }
 
 }
