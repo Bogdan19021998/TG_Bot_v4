@@ -7,14 +7,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="vit_bot" />
         <module name="TG_Bot_v4" />
+        <module name="vit_bot" />
+        <module name="telegram-bot_v4" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="TG_Bot_v4" options="-parameters" />
+      <module name="telegram-bot_v4" options="-parameters" />
       <module name="vit_bot" options="-parameters" />
     </option>
   </component>
